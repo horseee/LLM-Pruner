@@ -27,12 +27,13 @@ Here we show an example on LLaMA about the automatically detected coupled struct
 <img src="figures/LLaMA_example.png" width="100%"> <br>
 </p>
 
-** Available Models: **
+**Available Models:**
 - [x] LLaMA-7B: the HuggingFace Version
 - [x] Vicuna-7B
 
-** Features will come out soon: **
-- []
+
+**Features will come out soon:**
+- [] 
 - []
 
 
@@ -42,7 +43,7 @@ Here we show an example on LLaMA about the automatically detected coupled struct
 
 
 ## Quantitative Results
-The quantitative results of 
+The quantitative results of LLaMA-7B is shown in the below table. More results can be found in the paper.
 
 | Pruning Ratio        | Method                   | WikiText2 | PTB | BoolQ | PIQA  | HellaSwag | WinoGrande | ARC-e | ARC-c | OBQA  | Average |
 |----------------------|--------------------------|-----------------------------------|-----------------------------|-------|-------|-----------|------------|-------|-------|-------|---------|
@@ -58,12 +59,6 @@ The quantitative results of
 
 
 ## More Examples
-
-<style>
-table {
-    font-size: small;
-}
-</style>
 
 | Original Model | Output | Pruned Model |  Output |
 |--|--|--|--| 
