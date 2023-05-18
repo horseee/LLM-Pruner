@@ -25,7 +25,6 @@ def set_random_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     
-
 def main(args):
     set_random_seed(args.seed)
 
@@ -39,7 +38,7 @@ def main(args):
     tokenizer = LlamaTokenizer.from_pretrained(args.base_model)
     model = LlamaForCausalLM.from_pretrained(
         args.base_model,
-        low_cpu_mem_usage=True if args.torch_version >=9 else False
+        low_cpu_mem_usage=True if args.torch_version >=1.9 else False
     )
     if args.device != "cpu":
         model.half()
@@ -68,7 +67,7 @@ def main(args):
     #logger.log("PPL before pruning: {}".format(ppl))
 
     pruner_type = args.pruner_type.lower()
-    assert pruner_type in ['random', 'l2', 'l1', 'taylor', 'similarity', 'fulltaylor']
+    assert pruner_type in ['random', 'l2', 'l1', 'taylor']
 
     for param in model.parameters():
         param.requires_grad_(True)
@@ -77,7 +76,7 @@ def main(args):
     forward_prompts = torch.tensor([
         [    1,   306,  4658,   278,  6593,   310,  2834,   338],
         [    1,  3439, 17632,  1925, 29892,   278,  6368,   310],
-    ]).to(args.device) # Only for building the dependency graph. Any input will be ok since the computation result are not taken into consideration.
+    ]).to(args.device) # Only for building the dependency graph. Any input will be fine since the computation result are not taken into consideration.
 
     if pruner_type == 'random':
         imp = tp.importance.RandomImportance()
@@ -87,12 +86,6 @@ def main(args):
         imp = llama_pruner.MagnitudeImportance(p=2)
     elif pruner_type == 'taylor':
         imp = llama_pruner.TaylorImportance(group_reduction=args.grouping_strategy, taylor=args.taylor)
-    elif pruner_type == 'similarity':
-        imp = llama_pruner.SimilarityImportance()
-    elif pruner_type == 'saliency':
-        imp = llama_pruner.SaliencyImportance()
-    elif pruner_type == 'fulltaylor':
-        imp = llama_pruner.FullTaylorImportance()
     else:
         raise NotImplementedError
 
@@ -104,7 +97,7 @@ def main(args):
             "importance": imp,
             "global_pruning": args.global_pruning,
             "iterative_steps": iterative_steps,
-            "ch_sparsity": args.pruning_ratio, # remove 50% channels, ResNet18 = {64, 128, 256, 512} => ResNet18_Half = {32, 64, 128, 256}
+            "ch_sparsity": args.pruning_ratio, 
             "ignored_layers":[],
             "channel_groups": {
             },
@@ -128,37 +121,22 @@ def main(args):
         )
         model.zero_grad()
 
-        # prepare for pruner
-        #if pruner_type in ['fulltaylor']:
-        #    for module in model.modules():
-        #        module.register_forward_pre_hook(imp._save_input)
-        #        module.register_backward_hook(imp._save_grad_output)
-
         logger.log("Start Pruning")
         for i in range(iterative_steps):
 
-            if pruner_type in ['taylor', 'similarity']:
+            if pruner_type in ['taylor']:
                 example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64)
                 logger.log("Start Backwarding in iterative steps = {}...".format(i))
                 loss = model(example_prompts, labels=example_prompts).loss
                 logger.log("Loss = {}".format(loss))
                 loss.backward()
-            
-            if pruner_type in ['fulltaylor']:
-                logger.log("Start Backwarding in iterative steps = {}...".format(i))
-                loss = model(example_prompts, labels=example_prompts).loss
-                loss.backward()
-                #for prompt in example_prompts:
-                #    loss = model(prompt.unsqueeze(0), labels=prompt.unsqueeze(0)).loss
-                #    loss.backward()
-                #    imp.step += 1
 
             pruner.step()
 
             after_pruning_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
             logger.log("After Iter {}/{}, #parameters: {}".format(i+1, iterative_steps, after_pruning_parameters))
         
-        # modify inferece-related attributes
+            # modify inferece-related attributes
             for layer in model.model.layers:
                 layer.self_attn.num_heads = layer.self_attn.q_proj.weight.data.shape[0] // layer.self_attn.head_dim
 
@@ -169,8 +147,6 @@ def main(args):
                 module.grad = None
 
         del pruner
-        gc.collect()
-        torch.cuda.empty_cache()
 
     elif args.channel_wise:
         kwargs = {
@@ -200,16 +176,11 @@ def main(args):
         logger.log("Start Pruning")
         for i in range(iterative_steps):
 
-            if pruner_type in ['taylor', 'similarity']:
+            if pruner_type in ['taylor']:
                 example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64)
                 logger.log("Start Backwarding in iterative steps = {}...".format(i))
                 loss = model(example_prompts, labels=example_prompts).loss
                 logger.log("Loss = {}".format(loss))
-                loss.backward()
-            
-            if pruner_type in ['fulltaylor']:
-                logger.log("Start Backwarding in iterative steps = {}...".format(i))
-                loss = model(example_prompts, labels=example_prompts).loss
                 loss.backward()
 
             pruner.step()
@@ -227,22 +198,18 @@ def main(args):
         model.config.hidden_size = model.model.embed_tokens.weight.shape[1]
         model.zero_grad()
         
-        if args.device != "cpu":
-            del pruner
-            gc.collect()
-            torch.cuda.empty_cache()
+        del pruner
+            
     elif args.layer_wise:
         model.model.layers = model.model.layers[:args.layer]
         after_pruning_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-        if args.device != "cpu":
-            torch.cuda.empty_cache()
-            gc.collect()
-    
     else:
         raise NotImplementedError
     logger.log("#Param before: {}, #Param after: {}, Ratio = {:.4f}%".format(before_pruning_parameters, after_pruning_parameters,  100.0*after_pruning_parameters/before_pruning_parameters))
     
+    gc.collect()
+    torch.cuda.empty_cache()
 
     if args.save_model:
         model.half()
@@ -319,6 +286,6 @@ if __name__ == "__main__":
     parser.add_argument('--save_model', action='store_true', help='if save model')
     args = parser.parse_args()
 
-    torch_version = int(torch.__version__.split('.')[1])
+    torch_version = float('.'.join(torch.__version__.split('.')[:2]))
     args.torch_version = torch_version
     main(args)
