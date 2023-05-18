@@ -14,7 +14,10 @@ The paper will be released really soon!
 
 ## Introduction
 
-Structural Pruning offers a potential solution to this issue by removing parameters from models. To this end, this project aims to build a straightforward and general pipeline for the pruning of LLaMA and other LLMs.
+Structural Pruning offers a potential solution to this issue by removing parameters from models. To this end, this project aims to build a straightforward and general pipeline for the pruning of LLaMA and other LLMs. LLM-Pruner consists of three steps: (1) <u>Discovery Stage</u>. This step focuses on identifying groups of interdependent structures within LLMs. (2) <u>Estimation Stage</u>. Once the coupled structures are grouped, the second step entails estimating the
+contribution of each group to the overall performance of the model and deciding which group to be
+pruned. (3) <u>Recover Stage</u>. This step involves fast post-training that alleviates potential
+performance degradation caused by the removal of structures
 
 The advantage of the LLM-Pruner is: 
 * **Task-agnostic compression**. The compressed language model retains its ability to
@@ -28,15 +31,13 @@ Here we show an example on LLaMA about the automatically detected coupled struct
 </p>
 
 **Available Models:**
-- [x] LLaMA-7B: the HuggingFace Version
-- [x] Vicuna-7B
+- [x] LLaMA-7B: [x] HuggingFace Version [] Official Version
+- [x] Vicuna-7B: [] Official Version
 
+** LLMs that will come out soon:**
+- [] ChatGLM 
 
-**Features will come out soon:**
-- [] 
-- []
-
-
+If you want to adopt it in more models, please try to follow the instruction of customized the LLM-Puner for your model. 
 
 ## Instruction
 
@@ -47,15 +48,11 @@ The quantitative results of LLaMA-7B is shown in the below table. More results c
 
 | Pruning Ratio        | Method                   | WikiText2 | PTB | BoolQ | PIQA  | HellaSwag | WinoGrande | ARC-e | ARC-c | OBQA  | Average |
 |----------------------|--------------------------|-----------------------------------|-----------------------------|-------|-------|-----------|------------|-------|-------|-------|---------|
-| Ratio = 0            | LLaMA-7B                 | -                                 | -                           | 76.5  | 79.8  | 76.1      | 70.1       | 72.8  | 47.6  | 57.2  | 68.59   |
-|                      | LLaMA-7B*                | 12.62                             | 22.14                       | 73.18 | 78.35 | 72.99     | 67.01      | 67.45 | 41.38 | 42.40 | 63.25   |
+| Ratio = 0            | LLaMA-7B*                | 12.62                             | 22.14                       | 73.18 | 78.35 | 72.99     | 67.01      | 67.45 | 41.38 | 42.40 | 63.25   |
 | Ratio = 20% w/o tune | l2                       | 582.41                            | 1022.17                     | 59.66 | 58.00 | 37.04     | 52.41      | 33.12 | 28.58 | 29.80 | 42.65   |
 |                      | random                   | 27.51                             | 43.19                       | 61.83 | 71.33 | 56.26     | 54.46      | 57.07 | 32.85 | 35.00 | 52.69   |
-|                      | Channel Group            | 74.63                             | 153.75                      | 62.75 | 62.73 | 41.40     | 51.07      | 41.38 | 27.90 | 30.40 | 45.38   |
-|                      | $\text{Parameter}^{1+2}$ | 19.24                             | 34.09                       | 62.54 | 75.41 | 65.99     | 60.30      | 61.57 | 36.69 | 39.20 | 57.39   |
-| Ratio = 20% w/ tune  | Channel Group            | 22.02                             | 38.67                       | 59.08 | 73.39 | 64.02     | 60.54      | 57.95 | 35.58 | 38.40 | 55.57   |
-|                      | Weight                   | 18.84                             | 33.05                       | 65.75 | 74.70 | 64.52     | 59.35      | 60.65 | 36.26 | 39.40 | 57.23   |
-|                      | $\text{Parameter}^{1+2}$ | 17.39                             | 30.20                       | 66.79 | 77.58 | 68.48     | 64.96      | 64.06 | 37.88 | 39.00 | 59.82   |
+|                      | LLM-Pruner | 19.24                             | 34.09                       | 62.54 | 75.41 | 65.99     | 60.30      | 61.57 | 36.69 | 39.20 | 57.39   |
+| Ratio = 20% w/ tune  | LLM-Pruner | 17.39                             | 30.20                       | 66.79 | 77.58 | 68.48     | 64.96      | 64.06 | 37.88 | 39.00 | 59.82   |
 
 
 ## More Examples
