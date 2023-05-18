@@ -14,10 +14,10 @@ The paper will be released really soon!
 Structural Pruning offers a potential solution to this issue by removing parameters from models. To this end, this project aims to build a straightforward and general pipeline for the pruning of LLaMA and other LLMs.
 
 The advantage of the LLM-Pruner is: 
-* Task-agnostic compression, where the compressed language model retains its ability to
+* **Task-agnostic compression**. The compressed language model retains its ability to
 serve as a multi-task solver. 
-* Reduced demand for the original training corpus, where temporarily, we use only 50k publicly available samples (Alpaca). **No need for downloading the training corpus of the LLM**. Thus, we can achieve quick compression, where the compression process ends up in three hours (3 minutes on pruning and 3 hours on tuning).
-* An automatic structural pruning framework. We hope that this pruning framework can be used to various LLMs with minimal effort to write the code for finding the coupled pruning structure and estimating the importance. We are still working on this, and we will give an tutorial on how to quickly extend this framework to a new LLM.
+* **No need for downloading the training corpus of the LLM**. Reduced demand for the original training corpus, where temporarily, we use only 50k publicly available samples (Alpaca).  Thus, we can achieve quick compression, where the compression process ends up in three hours (3 minutes on pruning and 3 hours on tuning).
+* **An automatic structural pruning framework.** We hope that this pruning framework can be used to various LLMs with minimal effort to write the code for finding the coupled pruning structure and estimating the importance. We are still working on this, and we will give an tutorial on how to quickly extend this framework to a new LLM.
 
 Here we show an example on LLaMA about the automatically detected coupled structures and the generated sentences under the same prompt.
 <p align="center">
