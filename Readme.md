@@ -2,8 +2,11 @@
 <img src="figures/logo.png" width="15%"> <br>
 </p>
 
-# LLM-Pruner: On the structural pruning of Large Language Model
-
+<div align="center">
+<h1>LLM-Pruner</h1>
+<h3>On the structural pruning of Large Language Models<h3>
+</div>
+    
 Use our LLM-Pruner to customize and compress your own LLM in any size! 
 
 The paper will be released really soon!
