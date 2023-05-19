@@ -5,30 +5,29 @@
 <div align="center">
 <h1>LLM-Pruner</h1>
 <h3>On the Structural Pruning of Large Language Models<h3>
+:llama: :llama: :llama: :llama: :llama: Compress your LLMs to any size! :llama: :llama: :llama: :llama: :llama:
 </div>
     
-Use our LLM-Pruner to customize and compress your own LLM in any size! We show an example on LLaMA about the automatically detected coupled structures and the generated sentences under the same prompt.
+
 <p align="center">
+<img width="100%" alt="image" src="https://github.com/horseee/LLM-Pruner/assets/18592211/d68595e6-5688-4602-a662-45885a166a9b">    
 <img src="figures/LLaMA_example.png" width="100%"> <br>
 </p>
 
-The paper will be released really soon!
 
+## Why LLM-Pruner
+    
+* **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
+* **Less training corpus**: In this work, we use only 50k publicly available corpus to compress an Alpaca model.  
+* **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
+* **Automatic structural pruning**: Pruning new LLMs with minimal human efforts (In progress).
 
-## Introduction
-The advantage of the LLM-Pruner is: 
-* **Task-agnostic compression**. The compressed language model retains its ability to
-serve as a multi-task solver. 
-* **No need for downloading the training corpus of the LLM**. Reduced demand for the original training corpus, where temporarily, we use only 50k publicly available samples (Alpaca).  
-* **quick compression**. The compression process ends up in three hours (3 minutes on pruning and 3 hours on tuning).
-* **An automatic structural pruning framework.** We hope that this pruning framework can be used to various LLMs with minimal effort to write the code for finding the coupled pruning structure and estimating the importance. We are still working on this, and we will give an tutorial on how to quickly extend this framework to a new LLM.
-
-We are gradually organizing and releasing the code on GitHub. Please refer to the checklist below:
+## Features
 **Supported Models:**
 - [x] LLaMA-7B:  the HuggingFace Version
 - [x] Vicuna-7B: Official Version
 
-**Features that will come out soon:** 
+**TODO List:** 
 - [ ] Code for the Official version LLaMA-7B
 - [ ] Code for ChatGLM
 - [ ] Code for post-training
@@ -36,34 +35,28 @@ We are gradually organizing and releasing the code on GitHub. Please refer to th
 
 ## Instruction
 
+### QuickStart
+Three steps to prune an LLM:
+* <u>Discovery Stage</u>: Discover the complicated inter-dependency in LLMs and find the minimally-removable unit, **group**.
+* <u>Estimation Stage</u>: Estimating the contribution of each group to the overall performance of the model and deciding which group to be pruned. 
+* <u>Recover Stage</u>: Fast post-training to recover model performance.
 
-### Quick look
-LLM-Pruner consists of three steps: 
-*  <u>Discovery Stage</u>. This step focuses on identifying groups of interdependent structures within LLMs. 
-* <u>Estimation Stage</u>. Once the coupled structures are grouped, the second step entails estimating the contribution of each group to the overall performance of the model and deciding which group to be pruned. 
-* <u>Recover Stage</u>. This step involves fast post-training that alleviates potential
-performance degradation caused by the removal of structures
-
-The first two steps will be accomplished in Step One, and the recovery stage will be in Step Two. For the evaluation, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a>.
+For the evaluation, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a>.
 
 ### Installation
 ```
 pip install -r requirement.txt
 ```
 
-### Step One
-
-An example instruction for pruning LLaMA-7B:
+### Pruning (Discovery Stage + Estimation Stage)
+    
+An example for LLaMA-7B pruning:
 ```
 python hf_prune.py --pruning_ratio 0.25 --device cpu --eval_device cuda --block_wise --block_mlp_layer_start 4 --block_mlp_layer_end 30 --block_attention_layer_start 4 --block_attention_layer_end 30 --save_ckpt_log_name llama_prune --pruner_type taylor --taylor param_first --test_after_train
 ```
 
-### Step Two
+### Post-Training (Recover Stage)
 Release Soon
-
-
-
-
 
 ## Quantitative Results
 A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below table. More results can be found in the paper.
