@@ -4,7 +4,7 @@
 
 <div align="center">
 <h1>LLM-Pruner</h1>
-<h3>On the structural pruning of Large Language Models<h3>
+<h3>On the Structural Pruning of Large Language Models<h3>
 </div>
     
 Use our LLM-Pruner to customize and compress your own LLM in any size! We show an example on LLaMA about the automatically detected coupled structures and the generated sentences under the same prompt.
