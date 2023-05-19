@@ -1,5 +1,5 @@
 <p align="center">
-<img src="figures/logo.png" width="15%"> <br>
+<img src="figures/logo.png" width="20%"> <br>
 </p>
 
 <div align="center">
@@ -7,54 +7,64 @@
 <h3>On the structural pruning of Large Language Models<h3>
 </div>
     
-Use our LLM-Pruner to customize and compress your own LLM in any size! 
+Use our LLM-Pruner to customize and compress your own LLM in any size! We show an example on LLaMA about the automatically detected coupled structures and the generated sentences under the same prompt.
+<p align="center">
+<img src="figures/LLaMA_example.png" width="100%"> <br>
+</p>
 
 The paper will be released really soon!
 
 
 ## Introduction
-
-Structural Pruning offers a potential solution to this issue by removing parameters from models. To this end, this project aims to build a straightforward and general pipeline for the pruning of LLaMA and other LLMs. LLM-Pruner consists of three steps: (1) <u>Discovery Stage</u>. This step focuses on identifying groups of interdependent structures within LLMs. (2) <u>Estimation Stage</u>. Once the coupled structures are grouped, the second step entails estimating the
-contribution of each group to the overall performance of the model and deciding which group to be
-pruned. (3) <u>Recover Stage</u>. This step involves fast post-training that alleviates potential
-performance degradation caused by the removal of structures
-
 The advantage of the LLM-Pruner is: 
 * **Task-agnostic compression**. The compressed language model retains its ability to
 serve as a multi-task solver. 
-* **No need for downloading the training corpus of the LLM**. Reduced demand for the original training corpus, where temporarily, we use only 50k publicly available samples (Alpaca).  Thus, we can achieve quick compression, where the compression process ends up in three hours (3 minutes on pruning and 3 hours on tuning).
+* **No need for downloading the training corpus of the LLM**. Reduced demand for the original training corpus, where temporarily, we use only 50k publicly available samples (Alpaca).  
+* **quick compression**. The compression process ends up in three hours (3 minutes on pruning and 3 hours on tuning).
 * **An automatic structural pruning framework.** We hope that this pruning framework can be used to various LLMs with minimal effort to write the code for finding the coupled pruning structure and estimating the importance. We are still working on this, and we will give an tutorial on how to quickly extend this framework to a new LLM.
 
-Here we show an example on LLaMA about the automatically detected coupled structures and the generated sentences under the same prompt.
-<p align="center">
-<img src="figures/LLaMA_example.png" width="100%"> <br>
-</p>
-
-**Available Models:**
+We are gradually organizing and releasing the code on GitHub. Please refer to the checklist below:
+**Supported Models:**
 - [x] LLaMA-7B:  the HuggingFace Version
 - [x] Vicuna-7B: Official Version
 
 **Features that will come out soon:** 
+- [ ] Code for the Official version LLaMA-7B
 - [ ] Code for ChatGLM
 - [ ] Code for post-training
-- [ ] The tutorial of customizing the LLM-Pruner for new model.
- 
-If you want to use it in more models, please try to follow the instruction of customized the LLM-Puner for your model. 
+- [ ] The tutorial of customizing the LLM-Pruner for new model: If you want to use it in your models, please try to follow this instruction
 
 ## Instruction
+
+
+### Quick look
+LLM-Pruner consists of three steps: 
+*  <u>Discovery Stage</u>. This step focuses on identifying groups of interdependent structures within LLMs. 
+* <u>Estimation Stage</u>. Once the coupled structures are grouped, the second step entails estimating the contribution of each group to the overall performance of the model and deciding which group to be pruned. 
+* <u>Recover Stage</u>. This step involves fast post-training that alleviates potential
+performance degradation caused by the removal of structures
+
+The first two steps will be accomplished in Step One, and the recovery stage will be in Step Two. For the evaluation, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a>.
+
+### Install
+
+
+### Step One:
+
+
+
+### Step Two:
+
+
 
 
 
 ## Quantitative Results
 A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below table. More results can be found in the paper.
 
-| Pruning Ratio        | Method                   | WikiText2 | PTB | BoolQ | PIQA  | HellaSwag | WinoGrande | ARC-e | ARC-c | OBQA  | Average |
-|----------------------|--------------------------|-----------------------------------|-----------------------------|-------|-------|-----------|------------|-------|-------|-------|---------|
-| Ratio = 0            | LLaMA-7B*                | 12.62                             | 22.14                       | 73.18 | 78.35 | 72.99     | 67.01      | 67.45 | 41.38 | 42.40 | 63.25   |
-| Ratio = 20% w/o tune | l2                       | 582.41                            | 1022.17                     | 59.66 | 58.00 | 37.04     | 52.41      | 33.12 | 28.58 | 29.80 | 42.65   |
-|                      | random                   | 27.51                             | 43.19                       | 61.83 | 71.33 | 56.26     | 54.46      | 57.07 | 32.85 | 35.00 | 52.69   |
-|                      | LLM-Pruner | 19.24                             | 34.09                       | 62.54 | 75.41 | 65.99     | 60.30      | 61.57 | 36.69 | 39.20 | 57.39   |
-| Ratio = 20% w/ tune  | LLM-Pruner | 17.39                             | 30.20                       | 66.79 | 77.58 | 68.48     | 64.96      | 64.06 | 37.88 | 39.00 | 59.82   |
+<p align="center">
+<img src="figures/LLaMAResults.png" width="100%"> <br>
+</p>
 
 
 ## More Examples
