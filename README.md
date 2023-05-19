@@ -53,9 +53,13 @@ pip install -r requirement.txt
 
 ### Step One
 
+An example instruction for pruning LLaMA-7B:
+```
+python hf_prune.py --pruning_ratio 0.25 --device cpu --eval_device cuda --block_wise --block_mlp_layer_start 4 --block_mlp_layer_end 30 --block_attention_layer_start 4 --block_attention_layer_end 30 --save_ckpt_log_name llama_prune --pruner_type taylor --taylor param_first --test_after_train
+```
 
-
-### Step Two:
+### Step Two
+Release Soon
 
 
 

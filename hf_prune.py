@@ -15,9 +15,9 @@ from LLMPruner.models.hf_llama.modeling_llama import LlamaForCausalLM, LlamaRMSN
 import LLMPruner.torch_pruning as tp 
 from LLMPruner.pruner import hf_llama_pruner as llama_pruner
 from LLMPruner.utils.logger import LoggerWithDepth
-from LLMPruner.templates.prompts import prompts
 from LLMPruner.evaluator.ppl import PPLMetric
 from LLMPruner.datasets.example_samples import get_examples
+from LLMPruner.templates.prompts import prompts
 
 def set_random_seed(seed):
     random.seed(seed)
@@ -29,9 +29,9 @@ def main(args):
     set_random_seed(args.seed)
 
     logger = LoggerWithDepth(
-        env_name="{}_{}".format(args.save_ckpt_name, args.pruner_type), 
+        env_name="{}_{}_{}".format(args.save_ckpt_log_name, args.pruner_type, args.pruning_ratio), 
         config=args.__dict__,
-        root_dir='hf_prune_log',
+        root_dir='log',
         setup_sublogger=True
     )
 
@@ -44,7 +44,7 @@ def main(args):
         model.half()
     model.to(args.device)
 
-    if args.verbose:
+    if args.test_before_train:
         logger.log("\n==================Generation Results before Pruning================\n")
         model.eval()
         with torch.no_grad():
@@ -63,8 +63,8 @@ def main(args):
                 result = tokenizer.decode(generation_output[0])
                 logger.log(result)
     
-    #ppl = PPLMetric(model, tokenizer, ['wikitext2', 'ptb'], args.max_seq_len, device=args.device)
-    #logger.log("PPL before pruning: {}".format(ppl))
+        ppl = PPLMetric(model, tokenizer, ['wikitext2', 'ptb'], args.max_seq_len, device=args.device)
+        logger.log("PPL before pruning: {}".format(ppl))
 
     pruner_type = args.pruner_type.lower()
     assert pruner_type in ['random', 'l2', 'l1', 'taylor']
@@ -90,13 +90,12 @@ def main(args):
         raise NotImplementedError
 
     logger.log("Use {} pruner...".format(pruner_type))
-    iterative_steps = 1
     
     if args.block_wise:
         kwargs = {
             "importance": imp,
             "global_pruning": args.global_pruning,
-            "iterative_steps": iterative_steps,
+            "iterative_steps": args.iterative_steps,
             "ch_sparsity": args.pruning_ratio, 
             "ignored_layers":[],
             "channel_groups": {
@@ -122,7 +121,7 @@ def main(args):
         model.zero_grad()
 
         logger.log("Start Pruning")
-        for i in range(iterative_steps):
+        for i in range(args.iterative_steps):
 
             if pruner_type in ['taylor']:
                 example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64)
@@ -134,7 +133,7 @@ def main(args):
             pruner.step()
 
             after_pruning_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
-            logger.log("After Iter {}/{}, #parameters: {}".format(i+1, iterative_steps, after_pruning_parameters))
+            logger.log("After Iter {}/{}, #parameters: {}".format(i+1, args.iterative_steps, after_pruning_parameters))
         
             # modify inferece-related attributes
             for layer in model.model.layers:
@@ -152,7 +151,7 @@ def main(args):
         kwargs = {
             "importance": imp,
             "global_pruning": args.global_pruning,
-            "iterative_steps": iterative_steps,
+            "iterative_steps": args.iterative_steps,
             "ch_sparsity": args.pruning_ratio, # remove 50% channels, ResNet18 = {64, 128, 256, 512} => ResNet18_Half = {32, 64, 128, 256}
             "ignored_layers":[],
             "round_to": model.config.num_attention_heads * 2,
@@ -174,7 +173,7 @@ def main(args):
         model.zero_grad()
         
         logger.log("Start Pruning")
-        for i in range(iterative_steps):
+        for i in range(args.iterative_steps):
 
             if pruner_type in ['taylor']:
                 example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64)
@@ -186,7 +185,7 @@ def main(args):
             pruner.step()
 
             after_pruning_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
-            logger.log("After Iter {}/{}, #parameters: {}".format(i+1, iterative_steps, after_pruning_parameters))
+            logger.log("After Iter {}/{}, #parameters: {}".format(i+1, args.iterative_steps, after_pruning_parameters))
 
         # Clean the gradient in the model
         model.zero_grad()
@@ -222,7 +221,7 @@ def main(args):
         model.half()
     model.to(args.eval_device)
 
-    if args.verbose:
+    if args.test_after_train:
         logger.log("\n==================Generation Results After Pruning================\n")
         
         model.eval()
@@ -253,7 +252,7 @@ if __name__ == "__main__":
 
     # argument for parsing
     parser.add_argument('--base_model', type=str, default="decapoda-research/llama-7b-hf", help='base model name')
-    parser.add_argument('--save_ckpt_name', type=str, default="llama_prune", help='save checkpoint name')
+    parser.add_argument('--save_ckpt_log_name', type=str, default="llama_prune", help='the path for save the checkpoint and the log. The final path would be log/{your_name_here}_{pruner_type}_{pruning_ratio}')
     parser.add_argument('--pruning_ratio', type=float, default=0.5, help='pruning ratio')
     parser.add_argument('--pruner_type', type=str, default='l2', help='pruner type')
 
@@ -263,25 +262,27 @@ if __name__ == "__main__":
     parser.add_argument('--max_seq_len', type=int, default=128, help='max sequence length')
 
     # argument for layer-wise pruning/column-wise pruning
-    parser.add_argument('--layer_wise', action='store_true', help='layer wise')
-    parser.add_argument('--layer', type=int, default=12, help='layer')
-
     parser.add_argument('--channel_wise', action='store_true', help='channel wise')
     parser.add_argument('--block_wise', action='store_true', help='block wise')
-    parser.add_argument('--block_attention_layer_start', type=int, help='start layer of block attention layers', default=0)
-    parser.add_argument('--block_attention_layer_end', type=int, help='end layer of block attention layers', default=0)
+    parser.add_argument('--layerwise', action='store_true', help='layer wise')
+    parser.add_argument('--layer', type=int, default=12, help='remain the previous n layers')
 
-    parser.add_argument('--block_mlp_layer_start', type=int, help='start layer of block mlp layers', default=0)
-    parser.add_argument('--block_mlp_layer_end', type=int, help='end layer of block mlp layers', default=0)
+    parser.add_argument('--block_attention_layer_start', type=int, help='start layer of block attention layers', default=3)
+    parser.add_argument('--block_attention_layer_end', type=int, help='end layer of block attention layers', default=31)
+    parser.add_argument('--block_mlp_layer_start', type=int, help='start layer of block mlp layers', default=3)
+    parser.add_argument('--block_mlp_layer_end', type=int, help='end layer of block mlp layers', default=31)
 
-    parser.add_argument('--grouping_strategy', type=str, help='Reduce method for grouping', default='sum')
+    parser.add_argument('--iterative_steps', type=int, default=1, help="Iteration step for pruning. Default=1")
+    parser.add_argument('--grouping_strategy', type=str, default='sum', help='Reduce method for grouping')
     parser.add_argument('--global_pruning', action='store_true', help='whether global pruning')
-    parser.add_argument('--taylor', type=str, help='choose from [first-order, hessian, aprox-fisher]')
+    parser.add_argument('--taylor', type=str, default='param_mix', help='choose from [vectorize, param_second, param_first, param_mix]')
 
     # general argument
     parser.add_argument('--device', type=str, default="cuda", help='device')
+    parser.add_argument('--test_before_train', action='store_true', help='whether test after train')
     parser.add_argument('--eval_device', type=str, default="cuda", help='eval device')
-    parser.add_argument('--verbose', action='store_true', help='verbose')
+    parser.add_argument('--test_after_train', action='store_true', help='whether test before train')
+
     parser.add_argument('--seed', type=int, default=42, help='seed')
     parser.add_argument('--save_model', action='store_true', help='if save model')
     args = parser.parse_args()

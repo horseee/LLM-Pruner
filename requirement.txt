@@ -1,4 +1,4 @@
-pytorch>=1.7.1
+torch>=1.7.1
 transformers>=4.28.1
 datasets
 sentencepiece
