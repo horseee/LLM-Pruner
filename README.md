@@ -46,10 +46,12 @@ performance degradation caused by the removal of structures
 
 The first two steps will be accomplished in Step One, and the recovery stage will be in Step Two. For the evaluation, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a>.
 
-### Install
+### Installation
+```
+pip install -r requirement.txt
+```
 
-
-### Step One:
+### Step One
 
 
 

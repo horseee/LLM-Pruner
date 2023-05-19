@@ -1,0 +1,7 @@
+pytorch>=1.7.1
+transformers>=4.28.1
+datasets
+sentencepiece
+accelerate
+wandb
+ptflops
