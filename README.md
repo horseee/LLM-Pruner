@@ -71,11 +71,20 @@ Supported Pruning:
 Release Soon
 
 ## Zero-shot Evaluation Results
-A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below table. More results can be found in the paper.
+A brief quantitative results of LLM-Pruner of LLaMA-7B:
 
 <p align="center">
 <img src="figures/LLaMAResults.png" width="100%"> <br>
 </p>
+    
+The results for Vicuna-7B:
+    
+<p align="center">
+<img src="figures/VicunaResults.png" width="100%"> <br>
+</p>
+    
+    
+More results can be found in the paper.
 
 
 ## More Examples
