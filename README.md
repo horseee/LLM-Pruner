@@ -18,7 +18,7 @@
 ## Why LLM-Pruner
     
 * **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
-* **Less training corpus**: In this work, we use only 50k publicly available corpus to compress an Alpaca model.  
+* **Less training corpus**: In this work, we use only 50k publicly available corpus to post-train the LLM.  
 * **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
 * **Automatic structural pruning**: Pruning new LLMs with minimal human efforts (In progress).
 
