@@ -10,7 +10,7 @@
     
 
 <p align="center">
-<img width="100%" alt="image" src="https://github.com/horseee/LLM-Pruner/assets/18592211/d68595e6-5688-4602-a662-45885a166a9b">    
+<img width="100%" alt="image" src="figures/intro.png">    
 <img src="figures/LLaMA_example.png" width="100%"> <br>
 </p>
 
