@@ -50,10 +50,16 @@ pip install -r requirement.txt
 
 ### Pruning (Discovery Stage + Estimation Stage)
     
-An example for LLaMA-7B pruning:
+An example for LLaMA-7B pruning with ~20% parameters pruned:
 ```
-python hf_prune.py --pruning_ratio 0.25 --device cpu --eval_device cuda --block_wise --block_mlp_layer_start 4 --block_mlp_layer_end 30 --block_attention_layer_start 4 --block_attention_layer_end 30 --save_ckpt_log_name llama_prune --pruner_type taylor --taylor param_first --test_after_train
+python hf_prune.py --pruning_ratio 0.25 --device cpu  --eval_device cuda --block_wise --block_mlp_layer_start 4 --block_mlp_layer_end 30 --block_attention_layer_start 4 --block_attention_layer_end 30 --save_ckpt_log_name llama_prune --pruner_type taylor --test_after_train
 ```
+
+If you want to prune the Vicuna, please specify the argument `--base_model` to your path for the vicuna (see <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a> for how to get Vicuna weights)
+
+Supported Pruning:
+- [x] Block-wise, Channel-wise, Layer-wise Pruning: place {--block_wise}/{--channel_wise}/{--layer_wise --layer your_desired_layer_size}
+- [x] Multiple Pruning Strategy: l1, l2, random, taylor. Use the argument --pruner_type to specify the pruner. If you use the taylor pruner, than you have the following four choice: `vectorize, param_second, param_first, param_mix`. The `param_mix` is used by default (containing both the approximated hessian and gradient). 
 
 ### Post-Training (Recover Stage)
 Release Soon
@@ -75,7 +81,9 @@ A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below tab
 | ChatGLM-6B | <u>Write a poetry about love and peace.</u> In the midst of life's hustle and bustle, I find your love a soothing peace. It is a feeling that cannot be conveyed, A connection that cannot be distanced. With your smile, your eyes, your embrace, I feel a sense of belonging that only you can give. It is a love that lasts forever, A love that cannot be defeat... | LLaMa-5.4B | <u>Write a poetry about love and peace.</u> Love and peace, two such wonderful things\ A pure and endless desire in my heart\ And both of them, I must seek for\ A long, long time, I know..\ Love, I know, is a feeling of being\ A perfect partner, in every sense\ And peace, I need it, so much, one day\ A long, long way, my heart will go..|
 
 ## Limitations
-
+* Although we only used 50K data and trained for three hours, more data would definitely be better. We are now tesing on this.
+* The current compressed model still has several issues, such as generating repetitive tokens or producing nonsensical sentences. We believe there is significant room for improvement in the quality of the compressed model.
+* There are still some models for which we cannot automatically identify the mapping of indexes after concatenation and view operations. Therefore, we need to perform additional manual operations. 
 
 
 ## Acknowledgement

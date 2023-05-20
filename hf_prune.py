@@ -264,7 +264,7 @@ if __name__ == "__main__":
     # argument for layer-wise pruning/column-wise pruning
     parser.add_argument('--channel_wise', action='store_true', help='channel wise')
     parser.add_argument('--block_wise', action='store_true', help='block wise')
-    parser.add_argument('--layerwise', action='store_true', help='layer wise')
+    parser.add_argument('--layer_wise', action='store_true', help='layer wise')
     parser.add_argument('--layer', type=int, default=12, help='remain the previous n layers')
 
     parser.add_argument('--block_attention_layer_start', type=int, help='start layer of block attention layers', default=3)
