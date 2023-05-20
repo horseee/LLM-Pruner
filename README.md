@@ -102,6 +102,14 @@ A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below tab
 ## Citation
 If you find this project useful, please cite
 ```
+@article{ma2023llm_pruner,
+  title={LLM-Pruner: On the Structural Pruning of Large Language Models},
+  author={Ma, Xinyin, Fang, Gongfan and Wang, Xinchao},
+  journal={arXiv preprint},
+  year={2023}
+}
+```
+```
 @article{fang2023depgraph,
   title={DepGraph: Towards Any Structural Pruning},
   author={Fang, Gongfan and Ma, Xinyin and Song, Mingli and Mi, Michael Bi and Wang, Xinchao},
