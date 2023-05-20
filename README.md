@@ -22,7 +22,11 @@
 * **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
 * **Automatic structural pruning**: Pruning new LLMs with minimal human efforts (In progress).
 
-Our paper can be viewed here: <a href="https://drive.google.com/file/d/1mJyNkNZphoOw6OUl1caBKN54xflGFIoy/view?usp=share_link">paper</a>. The arxiv version will be released soon.
+> **LLM-Pruner: On the Structural Pruning of Large Language Models** [[Paper]](https://drive.google.com/file/d/1mJyNkNZphoOw6OUl1caBKN54xflGFIoy/view?usp=share_link)   
+> *Xinyin Ma, Gongfan Fang, Xinchao Wang*   
+> *National University of Singapore*        
+    
+The arxiv version will be released soon.
 
 ## Features
 **Supported Models:**
@@ -97,6 +101,14 @@ A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below tab
 
 ## Citation
 If you find this project useful, please cite
+```
+@article{ma2023llm_pruner,
+  title={LLM-Pruner: On the Structural Pruning of Large Language Models},
+  author={Ma, Xinyin, Fang, Gongfan and Wang, Xinchao},
+  journal={arXiv preprint},
+  year={2023}
+}
+```
 ```
 @article{fang2023depgraph,
   title={DepGraph: Towards Any Structural Pruning},
