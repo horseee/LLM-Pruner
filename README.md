@@ -18,16 +18,18 @@
 ## Why LLM-Pruner
     
 * **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
-* **Less training corpus**: In this work, we use only 50k publicly available corpus to post-train the LLM.  
+* **Less training corpus**: In this work, we use only 50k publicly available samples (alpaca) to post-train the LLM.  
 * **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
 * **Automatic structural pruning**: Pruning new LLMs with minimal human efforts (In progress).
+
+Our paper can be viewed here: <a href="https://drive.google.com/file/d/1mJyNkNZphoOw6OUl1caBKN54xflGFIoy/view?usp=share_link">paper</a>. The arxiv version will be released soon.
 
 ## Features
 **Supported Models:**
 - [x] LLaMA-7B:  the HuggingFace Version
 - [x] Vicuna-7B: Official Version
 
-**TODO List:** 
+**Release Soon:** 
 - [ ] Code for the Official version LLaMA-7B
 - [ ] Code for ChatGLM
 - [ ] Code for post-training
@@ -64,7 +66,7 @@ Supported Pruning:
 ### Post-Training (Recover Stage)
 Release Soon
 
-## Quantitative Results
+## Zero-shot Evaluation Results
 A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below table. More results can be found in the paper.
 
 <p align="center">
@@ -81,7 +83,7 @@ A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below tab
 | ChatGLM-6B | <u>Write a poetry about love and peace.</u> In the midst of life's hustle and bustle, I find your love a soothing peace. It is a feeling that cannot be conveyed, A connection that cannot be distanced. With your smile, your eyes, your embrace, I feel a sense of belonging that only you can give. It is a love that lasts forever, A love that cannot be defeat... | LLaMa-5.4B | <u>Write a poetry about love and peace.</u> Love and peace, two such wonderful things\ A pure and endless desire in my heart\ And both of them, I must seek for\ A long, long time, I know..\ Love, I know, is a feeling of being\ A perfect partner, in every sense\ And peace, I need it, so much, one day\ A long, long way, my heart will go..|
 
 ## Limitations
-* Although we only used 50K data and trained for three hours, more data would definitely be better. We are now tesing on this.
+* Although we only used 50K data and trained for three hours, more data would definitely be better. We are testing on this.
 * The current compressed model still has several issues, such as generating repetitive tokens or producing nonsensical sentences. We believe there is significant room for improvement in the quality of the compressed model.
 * There are still some models for which we cannot automatically identify the mapping of indexes after concatenation and view operations. Therefore, we need to perform additional manual operations. 
 
@@ -91,7 +93,7 @@ A brief quantitative results of LLM-Pruner of LLaMA-7B is shown in the below tab
 * The evaluation of the LLM:  <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a>
 * LLaMA: <a href="https://github.com/facebookresearch/llama"> https://github.com/facebookresearch/llama</a>
 * Vicuna: <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a>
-
+* Peft: <a href="https://github.com/huggingface/peft">https://github.com/huggingface/peft</a>
 
 ## Citation
 If you find this project useful, please cite
