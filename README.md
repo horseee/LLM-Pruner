@@ -83,8 +83,19 @@ The results for Vicuna-7B:
 <img src="figures/VicunaResults.png" width="100%"> <br>
 </p>
     
-    
-More results can be found in the paper.
+The results for ChatGLM-6B:
+
+<p align="center">
+<img src="figures/ChatGLMResults.png" width="80%"> <br>
+</p>
+
+Statistics for these pruned models:
+
+<p align="center">
+<img src="figures/statistic.png" width="50%"> <br>
+</p>
+
+More results can be found in the paper. 
 
 
 ## More Examples
