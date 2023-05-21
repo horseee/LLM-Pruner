@@ -31,7 +31,7 @@ def main(args):
     logger = LoggerWithDepth(
         env_name="{}_{}_{}".format(args.save_ckpt_log_name, args.pruner_type, args.pruning_ratio), 
         config=args.__dict__,
-        root_dir='log',
+        root_dir='prune_log',
         setup_sublogger=True
     )
 
@@ -215,7 +215,7 @@ def main(args):
         torch.save({
             'model': model, 
             'tokenizer': tokenizer,
-        }, logger.checkpoint_path)
+        }, logger.best_checkpoint_path)
     
     if args.eval_device != "cpu":
         model.half()

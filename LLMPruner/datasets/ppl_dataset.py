@@ -1,4 +1,5 @@
 '''
+Some of the code refer to
 https://github.com/IST-DASLab/gptq/blob/main/datautils.py
 '''
 
@@ -48,8 +49,6 @@ def get_loaders(name, tokenizer, seq_len=2048, batch_size = 8):
     if 'ptb' in name:
         train_data, test_data = get_ptb(seq_len, tokenizer)
         test_dataset = process_data(test_data, tokenizer, seq_len, 'sentence')
-    #if 'c4' in name:
-    #    train_data, test_data = get_c4(nsamples, seq_len, tokenizer)
 
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     return train_data, test_loader
