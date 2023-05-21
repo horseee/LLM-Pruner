@@ -77,7 +77,7 @@ python hf_prune.py --pruning_ratio 0.25 \
       --save_ckpt_log_name llama_prune 
 ```
 Arguments:
-- **Pruning Strategy:** Block-wise, Channel-wise, Layer-wise Pruning: place {--block_wise}/{--channel_wise}/{--layer_wise --layer your_desired_layer_size}. If you use Block-wise, please specify the start and end layer paticipate in pruning. If you channel-wise, no extra argument is needed. If you use layer-wise, please specify `--layer YOUR_LAYER_SIZE` 
+- **Pruning Strategy:** Block-wise, Channel-wise or Layer-wise Pruning. Just add {--block_wise}/{--channel_wise}/{--layer_wise --layer your_desired_layer_size} to the command. If you use Block-wise, please specify the start and end layer for pruning. If you would like to try channel-wise pruning, no extra argument is needed. For layer-wise pruning, please specify `--layer YOUR_LAYER_SIZE`.
 - **Importance Criterion:** l1, l2, random, taylor. Use the argument --pruner_type to specify the pruner. If you use the taylor pruner, than you have the following four choice: `vectorize, param_second, param_first, param_mix`. The `param_mix` is used by default (containing both the approximated second-order hessian and first-order gradient). If you use l1, l2 or random, no extra arguments need to be specified.
 - **Pruning Ratio**: The pruning ratio of groups. It is different from the **pruning rate of parameters** as we remove groups as the minimal units. 
 - **device and eval_device**: Pruning and evluation can be done on different devices. Taylor-based methods requires backward during pruning, which may requires huge GPU RAMs. Our implementation uses cpu for importance estimation. Similarly, eval_device is used to test the pruned model.
