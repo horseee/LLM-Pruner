@@ -53,7 +53,6 @@ The arxiv version will be released soon.
 #### Release Soon:
 - [ ] Code for the [Official LLaMA-7B](https://github.com/facebookresearch/llama)
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
-- [ ] Code for post-training
 - [ ] A tutorial for pruning new LLMs.
 
 
