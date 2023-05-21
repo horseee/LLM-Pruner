@@ -7,7 +7,24 @@
 <h3>On the Structural Pruning of Large Language Models<h3>
 :llama: :llama: :llama: :llama: :llama: Compress your LLMs to any size! :llama: :llama: :llama: :llama: :llama:
 </div>
-    
+<div align="center">
+  <a href="https://opensource.org/licenses/Apache-2.0">
+    <img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-4E94CE.svg">
+  </a>
+  <a href="https://pytorch.org/">
+    <img src="https://img.shields.io/badge/PyTorch-%3E=v1.8.1-EE4C2C.svg?style=flat-square" alt="PyTorch>=v1.8.1">
+  </a>
+  <a href="https://github.com/facebookresearch/llama">
+    <img src="https://img.shields.io/badge/LLMs-LLaMA-FFB000.svg?style=flat-square" alt="LLaMA">
+  </a>
+  <a href="https://github.com/vicuna">
+    <img src="https://img.shields.io/badge/LLMs-Vicuna-924E7D.svg?style=flat-square" alt="Vicuna">
+  </a>
+  <a href="https://github.com/chatGLM">
+    <img src="https://img.shields.io/badge/LLMs-chatGLM-6082B6.svg?style=flat-square" alt="chatGLM">
+  </a>
+</div>
+  
 
 <p align="center">
 <img width="100%" alt="image" src="figures/intro.png">    
