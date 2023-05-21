@@ -92,7 +92,7 @@ python hf_prune.py --pruning_ratio 0.25 \
       --pruner_type taylor \
       --test_after_train \
       --device cpu  --eval_device cuda \
-      --save_ckpt_log_name llama_prune 
+      --save_ckpt_log_name llama_prune \
       --base_model PATH_TO_VICUNA_WEIGHTS
 ```
     
