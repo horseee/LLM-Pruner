@@ -93,7 +93,7 @@ python hf_prune.py --pruning_ratio 0.25 \
       --test_after_train \
       --device cpu  --eval_device cuda \
       --save_ckpt_log_name llama_prune 
-      --model_base PATH_TO_VICUNA_WEIGHTS
+      --base_model PATH_TO_VICUNA_WEIGHTS
 ```
     
 #### :llama: ChatGLM Pruning
