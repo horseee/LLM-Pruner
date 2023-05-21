@@ -213,7 +213,7 @@ If you find this project useful, please cite
 ```
 @article{ma2023llm_pruner,
   title={LLM-Pruner: On the Structural Pruning of Large Language Models},
-  author={Ma, Xinyin, Fang, Gongfan and Wang, Xinchao},
+  author={Ma, Xinyin and Fang, Gongfan and Wang, Xinchao},
   journal={arXiv preprint},
   year={2023}
 }
