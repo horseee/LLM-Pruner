@@ -68,7 +68,7 @@ pip install -r requirement.txt
 ```
 bash script/llama_prune.sh
 ```
-This script would compress the LLaMA-7B model with 20\% parameters pruned. All the pre-trained models, the dataset would be automatically downloaded, so you do not need to manually download the resource. After the model pruned and post-trained, the compressed model and its 
+This script would compress the LLaMA-7B model with ～20\% parameters pruned. All the pre-trained models and the dataset would be automatically downloaded, so you do not need to manually download the resource. When running this script for the first time, it will require some time to download the model and the dataset.
 
     
 ### 3. Step-by-step Instructions  
@@ -118,6 +118,19 @@ Comming Soon...
     
 ### 3.2. Post-Training (Recover Stage)
 
+```
+python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_model.bin \
+      --data_path yahma/alpaca-cleaned \
+      --lora_r 8 \
+      --num_epochs 2 \ 
+      --learning_rate 1e-4 \ 
+      --batch_size 64 \
+      --output_dir tune_log/PATH_TO_SAVE_TUNE_MODEL \ 
+      --wandb_project llama_tune
+```
+Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in step 3.1, and replace `PATH_TO_SAVE_TUNE_MODEL` with the desired location where you want to save the tuned model.
+
+
 ### 3.3. Generation
 
 Geneate texts with pre-trained or pruned models.
@@ -133,6 +146,17 @@ python generate.py --model_type pruneLLM --ckpt <YOUR_MODEL_PATH_FOR_PRUNE_MODEL
 * Pruned Model with Post-Training 
 ```
 python generate.py --model_type tune_prune_LLM --ckpt <YOUR_CKPT_PATH_FOR_PRUNE_MODEL> --lora_ckpt <YOUR_CKPT_PATH_FOR_LORA_WEIGHT>
+```
+
+### 3.4. Testing MACs, Params and Memory
+
+* Pre-trained
+```
+python test_speedup.py --model_type pretrain
+```
+* Pruned Model
+```
+python test_speedup.py --model_type pruneLLM --ckpt <YOUR_MODEL_PATH_FOR_PRUNE_MODEL>
 ```
 
 ## Zero-shot Evaluation Results
@@ -183,6 +207,7 @@ More results can be found in the paper.
 * LLaMA: <a href="https://github.com/facebookresearch/llama"> https://github.com/facebookresearch/llama</a>
 * Vicuna: <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a>
 * Peft: <a href="https://github.com/huggingface/peft">https://github.com/huggingface/peft</a>
+* Alpaca-lora: <a href="https://github.com/tloen/alpaca-lora">https://github.com/tloen/alpaca-lora</a>
 
 ## Citation
 If you find this project useful, please cite

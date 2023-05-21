@@ -29,7 +29,7 @@ def main(args):
     set_random_seed(args.seed)
 
     logger = LoggerWithDepth(
-        env_name="{}_{}_{}".format(args.save_ckpt_log_name, args.pruner_type, args.pruning_ratio), 
+        env_name="{}".format(args.save_ckpt_log_name), 
         config=args.__dict__,
         root_dir='prune_log',
         setup_sublogger=True
@@ -220,6 +220,10 @@ def main(args):
     if args.eval_device != "cpu":
         model.half()
     model.to(args.eval_device)
+
+    model.config.pad_token_id = tokenizer.pad_token_id = 0 
+    model.config.bos_token_id = 1
+    model.config.eos_token_id = 2
 
     if args.test_after_train:
         logger.log("\n==================Generation Results After Pruning================\n")
