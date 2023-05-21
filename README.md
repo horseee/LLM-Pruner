@@ -41,6 +41,9 @@ The arxiv version will be released soon.
 - [ ] Code for post-training
 - [ ] The tutorial of customizing the LLM-Pruner for new model: If you want to use it in your models, please try to follow this instruction
 
+
+    
+    
 ## Instructions
     
 It takes three steps to prune an LLM:
@@ -85,7 +88,7 @@ If you want to try Vicuna, please specify the argument `--base_model` to the pat
     
 #### 3.3 ChatGLM Pruning
 Comming Soon...
-
+    
 ### 4. Post-Training (Recover Stage)
 
 ### 5. Generation
