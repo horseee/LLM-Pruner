@@ -58,7 +58,7 @@ This script would compress the LLaMA-7B model with 20\% parameters pruned. All t
     
 It takes three steps to prune an LLM:
 * <u>Discovery Stage</u>: Discover the complicated inter-dependency in LLMs and find the minimally-removable unit, **group**.
-* <u>Estimation Stage</u>: Estimating the contribution of each group to the overall performance of the model and deciding which group to prune. 
+* <u>Estimation Stage</u>: Estimate the contribution of each group to the overall performance of the model and decide which group to prune. 
 * <u>Recover Stage</u>: Fast post-training to recover model performance.
 
 After pruning and post-training, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a> for evaluation.
