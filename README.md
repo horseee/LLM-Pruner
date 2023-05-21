@@ -56,7 +56,7 @@ The arxiv version will be released soon.
 - [ ] A tutorial for pruning new LLMs.
 
 
-## Instructions
+## Quick Start
 
 ### 1. Installation
 ```
@@ -115,7 +115,7 @@ python hf_prune.py --pruning_ratio 0.25 \
 #### :llama: ChatGLM Pruning
 Comming Soon...
     
-### 3.2. Post-Training (Recover Stage)
+#### 3.2. Post-Training (Recover Stage)
 
 ```
 python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_model.bin \
@@ -130,7 +130,7 @@ python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_mode
 Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in step 3.1, and replace `PATH_TO_SAVE_TUNE_MODEL` with the desired location where you want to save the tuned model.
 
 
-### 3.3. Generation
+#### 3.3. Generation
 
 Geneate texts with pre-trained or pruned models.
     
@@ -147,7 +147,7 @@ python generate.py --model_type pruneLLM --ckpt <YOUR_MODEL_PATH_FOR_PRUNE_MODEL
 python generate.py --model_type tune_prune_LLM --ckpt <YOUR_CKPT_PATH_FOR_PRUNE_MODEL> --lora_ckpt <YOUR_CKPT_PATH_FOR_LORA_WEIGHT>
 ```
 
-### 3.4. Testing MACs, Params and Memory
+#### 3.4. Testing MACs, Params and Memory
 
 * Pre-trained
 ```
