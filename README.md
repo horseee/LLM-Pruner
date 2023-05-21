@@ -77,10 +77,10 @@ python hf_prune.py --pruning_ratio 0.25 \
       --save_ckpt_log_name llama_prune 
 ```
 Arguments:
-- **Pruning Strategy:** Block-wise, Channel-wise or Layer-wise Pruning. Just add {--block_wise}/{--channel_wise}/{--layer_wise --layer your_desired_layer_size} to the command. If you use Block-wise, please specify the start and end layer for pruning. If you would like to try channel-wise pruning, no extra argument is needed. For layer-wise pruning, please specify `--layer YOUR_LAYER_SIZE`.
-- **Importance Criterion:** l1, l2, random, taylor. Use the argument --pruner_type to specify the pruner. If you use the taylor pruner, than you have the following four choice: `vectorize, param_second, param_first, param_mix`. The `param_mix` is used by default (containing both the approximated second-order hessian and first-order gradient). If you use l1, l2 or random, no extra arguments need to be specified.
-- **Pruning Ratio**: The pruning ratio of groups. It is different from the **pruning rate of parameters** as we remove groups as the minimal units. 
-- **device and eval_device**: Pruning and evluation can be done on different devices. Taylor-based methods requires backward during pruning, which may requires huge GPU RAMs. Our implementation uses cpu for importance estimation. Similarly, eval_device is used to test the pruned model.
+- ``Pruning Strategy``: Choose between block-wise, channel-wise, or layer-wise pruning using the respective command options: {--block_wise}, {--channel_wise}, {--layer_wise --layer NUMBER_OF_LAYERS}. For block-wise pruning, specify the start and end layers to be pruned.channel-wise pruning does not require extra arguments. For layer pruning, use --layer NUMBER_OF_LAYERS to specify the desired number of layers to be kept after pruning.
+- ``Importance Criterion``: Select from l1, l2, random, or taylor using the --pruner_type argument. For the taylor pruner, choose one of the following options: vectorize, param_second, param_first, param_mix. By default, param_mix is used, which combines approximated second-order hessian and first-order gradient. If using l1, l2, or random, no extra arguments are required.
+- ``Pruning Ratio``: Specifies the pruning ratio of groups. It differs from the pruning rate of parameters, as groups are removed as the minimal units.
+- ``Device`` and ``Eval_device``: Pruning and evaluation can be performed on different devices. Taylor-based methods require backward computation during pruning, which may require significant GPU RAM. Our implementation uses the CPU for importance estimation. Similarly, eval_device is used to test the pruned model.
 
 #### :llama: Vicuna Pruning
 If you want to try Vicuna, please specify the argument `--base_model` to the path to vicuna weight. Please follow <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a> to get Vicuna weights.
