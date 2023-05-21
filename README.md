@@ -86,9 +86,9 @@ If you want to try Vicuna, please specify the argument `--base_model` to the pat
 #### 3.3 ChatGLM Pruning
 Comming Soon...
 
-### Post-Training (Recover Stage)
+### 4. Post-Training (Recover Stage)
 
-### Generation
+### 5. Generation
 
 Geneate texts with pre-trained or pruned models.
     
