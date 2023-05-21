@@ -15,6 +15,13 @@
 </p>
 
 
+> **LLM-Pruner: On the Structural Pruning of Large Language Models** [[Paper]](https://drive.google.com/file/d/1mJyNkNZphoOw6OUl1caBKN54xflGFIoy/view?usp=share_link)   
+> *Xinyin Ma, Gongfan Fang, Xinchao Wang*   
+> *National University of Singapore*  
+
+The arxiv version will be released soon.
+
+    
 ## Why LLM-Pruner
     
 * **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
@@ -22,12 +29,7 @@
 * **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
 * **Automatic structural pruning**: Pruning new LLMs with minimal human efforts (In progress).
 
-> **LLM-Pruner: On the Structural Pruning of Large Language Models** [[Paper]](https://drive.google.com/file/d/1mJyNkNZphoOw6OUl1caBKN54xflGFIoy/view?usp=share_link)   
-> *Xinyin Ma, Gongfan Fang, Xinchao Wang*   
-> *National University of Singapore*        
     
-The arxiv version will be released soon.
-
 ## Features
 **Supported Models:**
 - [x] LLaMA-7B:  the HuggingFace Version
@@ -39,30 +41,29 @@ The arxiv version will be released soon.
 - [ ] Code for post-training
 - [ ] The tutorial of customizing the LLM-Pruner for new model: If you want to use it in your models, please try to follow this instruction
 
-## Instruction
-
-### QuickStart
-Three steps to prune an LLM:
+## Instructions
+    
+It takes three steps to prune an LLM:
 * <u>Discovery Stage</u>: Discover the complicated inter-dependency in LLMs and find the minimally-removable unit, **group**.
 * <u>Estimation Stage</u>: Estimating the contribution of each group to the overall performance of the model and deciding which group to be pruned. 
 * <u>Recover Stage</u>: Fast post-training to recover model performance.
 
-For the evaluation, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a>.
+After pruning and post-training, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a> for evaluation.
 
-### Installation
+### 1. Installation
 ```
 pip install -r requirement.txt
 ```
 
-### Minimal Example
+### 2. Minimal Example
 ```
 bash script/llama_prune.sh
 ```
 This script would compress the LLaMA-7B model with 20\% parameters pruned. All the pre-trained models, the dataset would be automatically downloaded, so you do not need to manually download the resource. After the model pruned and post-trained, the compressed model and its 
 
-### Pruning (Discovery Stage + Estimation Stage)
+### 3. Pruning (Discovery Stage + Estimation Stage)
     
-An example for LLaMA-7B pruning with ~20% parameters pruned:
+#### 3.1 LLaMA-7B pruning with ~20% parameters pruned:
 ```
 python hf_prune.py --pruning_ratio 0.25 \
       --block_wise \
@@ -73,29 +74,33 @@ python hf_prune.py --pruning_ratio 0.25 \
       --device cpu  --eval_device cuda \
       --save_ckpt_log_name llama_prune 
 ```
+Arguments:
+- **Pruning Strategy:** Block-wise, Channel-wise, Layer-wise Pruning: place {--block_wise}/{--channel_wise}/{--layer_wise --layer your_desired_layer_size}. If you use Block-wise, please specify the start and end layer paticipate in pruning. If you channel-wise, no extra argument is needed. If you use layer-wise, please specify `--layer YOUR_LAYER_SIZE` 
+- **Importance Criterion:** l1, l2, random, taylor. Use the argument --pruner_type to specify the pruner. If you use the taylor pruner, than you have the following four choice: `vectorize, param_second, param_first, param_mix`. The `param_mix` is used by default (containing both the approximated second-order hessian and first-order gradient). If you use l1, l2 or random, no extra arguments need to be specified.
+- **Pruning Ratio**: The pruning ratio of groups. It is different from the **pruning rate of parameters** as we remove groups as the minimal units. 
+- **device and eval_device**: Pruning and evluation can be done on different devices. Taylor-based methods requires backward during pruning, which may requires huge GPU RAMs. Our implementation uses cpu for importance estimation. Similarly, eval_device is used to test the pruned model.
 
-If you want to prune the Vicuna, please specify the argument `--base_model` to your path for the vicuna weight(see <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a> for how to get Vicuna weights). By default, the script would load weight of LLaMA-7B (`decapoda-research/llama-7b-hf` version)
-
-Supported Functions:
-- [x] Block-wise, Channel-wise, Layer-wise Pruning: place {--block_wise}/{--channel_wise}/{--layer_wise --layer your_desired_layer_size}. If you use Block-wise, please specify the start and end layer paticipate in pruning. If you channel-wise, no extra argument is needed. If you use layer-wise, please specify `--layer YOUR_LAYER_SIZE` 
-- [x] Multiple Pruning Strategy: l1, l2, random, taylor. Use the argument --pruner_type to specify the pruner. If you use the taylor pruner, than you have the following four choice: `vectorize, param_second, param_first, param_mix`. The `param_mix` is used by default (containing both the approximated second-order hessian and first-order gradient). If you use l1, l2 or random, no extra arguments need to be specified.
-- [x] Pruning Ratio: The pruning ratio is not the **parameter pruning rate**, but the pruning ratio of groups that is discovered in the first step. Since the model contains the embedding layer, lm-head or other parameters that is perhaps not involved in the pruning, the final pruning ratio would be lower than the value you set.
-- [x] device and eval_device: device is used to choose if use cpu or cuda for pruning. Since if you use the taylor for pruning, it would need to backward the model to calculate the gradient. If your cuda is not feasible for this, try the alternative way of using CPU for calculating the gradient. eval_device is used to test the pruned model.
-
+#### 3.2 Vicuna Pruning
+If you want to try Vicuna, please specify the argument `--base_model` to the path to vicuna weight. Please follow <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a> to get Vicuna weights.
+    
+#### 3.3 ChatGLM Pruning
+Comming Soon...
 
 ### Post-Training (Recover Stage)
 
-
 ### Generation
-* LLaMA-7B 
+
+Geneate texts with pre-trained or pruned models.
+    
+* LLaMA-7B Pre-trained
 ```
 python generate.py --model_type pretrain
 ```
-* Prune Model without Post-Training
+* Pruned Model without Post-Training
 ```
 python generate.py --model_type pruneLLM --ckpt <YOUR_MODEL_PATH_FOR_PRUNE_MODEL>
 ```
-* Prune Model with Post-Training 
+* Pruned Model with Post-Training 
 ```
 python generate.py --model_type tune_prune_LLM --ckpt <YOUR_CKPT_PATH_FOR_PRUNE_MODEL> --lora_ckpt <YOUR_CKPT_PATH_FOR_LORA_WEIGHT>
 ```
