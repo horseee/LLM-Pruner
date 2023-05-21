@@ -41,13 +41,6 @@ The arxiv version will be released soon.
 
 
 ## Instructions
-    
-It takes three steps to prune an LLM:
-* <u>Discovery Stage</u>: Discover the complicated inter-dependency in LLMs and find the minimally-removable unit, **group**.
-* <u>Estimation Stage</u>: Estimating the contribution of each group to the overall performance of the model and deciding which group to be pruned. 
-* <u>Recover Stage</u>: Fast post-training to recover model performance.
-
-After pruning and post-training, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a> for evaluation.
 
 ### 1. Installation
 ```
@@ -60,9 +53,19 @@ bash script/llama_prune.sh
 ```
 This script would compress the LLaMA-7B model with 20\% parameters pruned. All the pre-trained models, the dataset would be automatically downloaded, so you do not need to manually download the resource. After the model pruned and post-trained, the compressed model and its 
 
-### 3. Pruning (Discovery Stage + Estimation Stage)
     
-#### 3.1 LLaMA-7B pruning with ~20% parameters pruned:
+### 3. Step-by-step Instructions  
+    
+It takes three steps to prune an LLM:
+* <u>Discovery Stage</u>: Discover the complicated inter-dependency in LLMs and find the minimally-removable unit, **group**.
+* <u>Estimation Stage</u>: Estimating the contribution of each group to the overall performance of the model and deciding which group to be pruned. 
+* <u>Recover Stage</u>: Fast post-training to recover model performance.
+
+After pruning and post-training, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a> for evaluation.
+    
+#### 3.1 Pruning (Discovery Stage + Estimation Stage)
+    
+:llama: **LLaMA-7B pruning with ~20% parameters pruned:**
 ```
 python hf_prune.py --pruning_ratio 0.25 \
       --block_wise \
@@ -79,15 +82,15 @@ Arguments:
 - **Pruning Ratio**: The pruning ratio of groups. It is different from the **pruning rate of parameters** as we remove groups as the minimal units. 
 - **device and eval_device**: Pruning and evluation can be done on different devices. Taylor-based methods requires backward during pruning, which may requires huge GPU RAMs. Our implementation uses cpu for importance estimation. Similarly, eval_device is used to test the pruned model.
 
-#### 3.2 Vicuna Pruning
+#### :llama: Vicuna Pruning
 If you want to try Vicuna, please specify the argument `--base_model` to the path to vicuna weight. Please follow <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a> to get Vicuna weights.
     
-#### 3.3 ChatGLM Pruning
+#### :llama: ChatGLM Pruning
 Comming Soon...
     
-### 4. Post-Training (Recover Stage)
+### 3.2. Post-Training (Recover Stage)
 
-### 5. Generation
+### 3.3. Generation
 
 Geneate texts with pre-trained or pruned models.
     
