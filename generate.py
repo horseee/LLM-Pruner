@@ -117,9 +117,6 @@ if __name__ == "__main__":
     parser.add_argument('--share_gradio', action='store_true')
 
     args = parser.parse_args()
-    torch_version = int(torch.__version__.split('.')[1])
-    args.torch_version = torch_version
-
     main(args)
 
 
