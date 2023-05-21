@@ -29,13 +29,11 @@ The arxiv version will be released soon.
 * **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
 * **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
 
-    
-## Features
-**Supported LLMs:**
+#### Supported LLMs:
 - [x] [LLaMA-7B HuggingFace](https://huggingface.co/docs/transformers/main/model_doc/llama)
 - [x] [Vicuna-7B Official](https://github.com/lm-sys/FastChat)
 
-**Release Soon:** 
+#### Release Soon:
 - [ ] Code for the [Official LLaMA-7B](https://github.com/facebookresearch/llama)
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] Code for post-training
