@@ -27,23 +27,21 @@ The arxiv version will be released soon.
 * **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
 * **Less training corpus**: In this work, we use only 50k publicly available samples (alpaca) to post-train the LLM.  
 * **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
-* **Automatic structural pruning**: Pruning new LLMs with minimal human efforts (In progress).
+* **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
 
     
 ## Features
-**Supported Models:**
-- [x] LLaMA-7B:  the HuggingFace Version
-- [x] Vicuna-7B: Official Version
+**Supported LLMs:**
+- [x] [LLaMA-7B HuggingFace](https://huggingface.co/docs/transformers/main/model_doc/llama)
+- [x] [Vicuna-7B Official](https://github.com/lm-sys/FastChat)
 
 **Release Soon:** 
-- [ ] Code for the Official version LLaMA-7B
-- [ ] Code for ChatGLM
+- [ ] Code for the [Official LLaMA-7B](https://github.com/facebookresearch/llama)
+- [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] Code for post-training
-- [ ] The tutorial of customizing the LLM-Pruner for new model: If you want to use it in your models, please try to follow this instruction
+- [ ] A tutorial for pruning new LLMs.
 
 
-    
-    
 ## Instructions
     
 It takes three steps to prune an LLM:
