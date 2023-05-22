@@ -4,10 +4,7 @@
 
 <div align="center">
 <h1>LLM-Pruner</h1>
-<h3>On the Structural Pruning of Large Language Models<h3>
-:llama: :llama: :llama: :llama: :llama: Compress your LLMs to any size! :llama: :llama: :llama: :llama: :llama:
-</div>
-<div align="center">
+  <div align="center">
   <a href="https://opensource.org/licenses/Apache-2.0">
     <img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-4E94CE.svg">
   </a>
@@ -24,7 +21,9 @@
     <img src="https://img.shields.io/badge/LLMs-chatGLM-6082B6.svg?style=flat-square" alt="chatGLM">
   </a>
 </div>
-  
+<h3>On the Structural Pruning of Large Language Models<h3>
+:llama: :llama: :llama: :llama: :llama: Compress your LLMs to any size! :llama: :llama: :llama: :llama: :llama:
+</div>
 
 <p align="center">
 <img width="100%" alt="image" src="figures/intro.png">    
@@ -36,13 +35,14 @@
 > *Xinyin Ma, Gongfan Fang, Xinchao Wang*   
 > *National University of Singapore*  
 ---
-    
-## Why LLM-Pruner
-    
-* **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
-* **Less training corpus**: In this work, we use only 50k publicly available samples (alpaca) to post-train the LLM.  
-* **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
-* **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
+
+## Introduction
+  
+#### Why LLM-Pruner
+- [x] **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
+- [x] **Less training corpus**: In this work, we use only 50k publicly available samples (alpaca) to post-train the LLM.  
+- [x] **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
+- [x] **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
 
 #### Supported LLMs:
 - [x] [LLaMA-7B HuggingFace](https://huggingface.co/docs/transformers/main/model_doc/llama)
