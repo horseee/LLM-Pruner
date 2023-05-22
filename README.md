@@ -32,11 +32,9 @@
 </p>
 
 
-> **LLM-Pruner: On the Structural Pruning of Large Language Models** [[Paper]](https://drive.google.com/file/d/1mJyNkNZphoOw6OUl1caBKN54xflGFIoy/view?usp=share_link)   
+> **LLM-Pruner: On the Structural Pruning of Large Language Models** [[Paper]](https://arxiv.org/pdf/2305.11627.pdf)   
 > *Xinyin Ma, Gongfan Fang, Xinchao Wang*   
 > *National University of Singapore*  
-
-The arxiv version will be released soon.
 
     
 ## Why LLM-Pruner
@@ -211,11 +209,13 @@ More results can be found in the paper.
 ## Citation
 If you find this project useful, please cite
 ```
-@article{ma2023llm_pruner,
-  title={LLM-Pruner: On the Structural Pruning of Large Language Models},
-  author={Ma, Xinyin and Fang, Gongfan and Wang, Xinchao},
-  journal={arXiv preprint},
-  year={2023}
+@misc{ma2023llmpruner,
+      title={LLM-Pruner: On the Structural Pruning of Large Language Models}, 
+      author={Xinyin Ma and Gongfan Fang and Xinchao Wang},
+      year={2023},
+      eprint={2305.11627},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
 }
 ```
 ```
