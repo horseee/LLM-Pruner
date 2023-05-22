@@ -30,14 +30,12 @@
 <img src="figures/LLaMA_example.png" width="100%"> <br>
 </p>
 
----
+## Introduction
+  
 > **LLM-Pruner: On the Structural Pruning of Large Language Models** [[arXiv]](https://arxiv.org/abs/2305.11627)   
 > *Xinyin Ma, Gongfan Fang, Xinchao Wang*   
 > *National University of Singapore*  
----
 
-## Introduction
-  
 #### Why LLM-Pruner
 - [x] **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
 - [x] **Less training corpus**: In this work, we use only 50k publicly available samples (alpaca) to post-train the LLM.  
@@ -48,36 +46,36 @@
 - [x] [LLaMA-7B HuggingFace](https://huggingface.co/docs/transformers/main/model_doc/llama)
 - [x] [Vicuna-7B Official](https://github.com/lm-sys/FastChat)
 
-#### Release Soon:
+#### TODO List:
 - [ ] Code for the [Official LLaMA-7B](https://github.com/facebookresearch/llama)
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] A tutorial for pruning new LLMs.
-
+- [ ] Scaling up the finetuning with large-scale corpus.
 
 ## Quick Start
 
-### 1. Installation
+### Installation
 ```
 pip install -r requirement.txt
 ```
 
-### 2. Minimal Example
+### Minimal Example
 ```
 bash script/llama_prune.sh
 ```
 This script would compress the LLaMA-7B model with ～20\% parameters pruned. All the pre-trained models and the dataset would be automatically downloaded, so you do not need to manually download the resource. When running this script for the first time, it will require some time to download the model and the dataset.
 
     
-### 3. Step-by-step Instructions  
+## Step-by-step Instructions  
     
 It takes three steps to prune an LLM:
 * <u>Discovery Stage</u>: Discover the complicated inter-dependency in LLMs and find the minimally-removable unit, **group**.
 * <u>Estimation Stage</u>: Estimate the contribution of each group to the overall performance of the model and decide which group to prune. 
 * <u>Recover Stage</u>: Fast post-training to recover model performance.
-
+  
 After pruning and post-training, we follow <a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a> for evaluation.
     
-#### 3.1 Pruning (Discovery Stage + Estimation Stage)
+### 1. Pruning (Discovery Stage + Estimation Stage)
     
 :llama: **LLaMA-7B pruning with ~20% parameters pruned:**
 ```
@@ -113,7 +111,7 @@ python hf_prune.py --pruning_ratio 0.25 \
 #### :llama: ChatGLM Pruning
 Comming Soon...
     
-#### 3.2. Post-Training (Recover Stage)
+### 2. Post-Training (Recover Stage)
 
 ```
 python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_model.bin \
@@ -125,10 +123,10 @@ python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_mode
       --output_dir tune_log/PATH_TO_SAVE_TUNE_MODEL \ 
       --wandb_project llama_tune
 ```
-Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in step 3.1, and replace `PATH_TO_SAVE_TUNE_MODEL` with the desired location where you want to save the tuned model.
+Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in step 1, and replace `PATH_TO_SAVE_TUNE_MODEL` with the desired location where you want to save the tuned model.
 
 
-#### 3.3. Generation
+### 3. Generation
 
 Geneate texts with pre-trained or pruned models.
     
@@ -145,7 +143,7 @@ python generate.py --model_type pruneLLM --ckpt <YOUR_MODEL_PATH_FOR_PRUNE_MODEL
 python generate.py --model_type tune_prune_LLM --ckpt <YOUR_CKPT_PATH_FOR_PRUNE_MODEL> --lora_ckpt <YOUR_CKPT_PATH_FOR_LORA_WEIGHT>
 ```
 
-#### 3.4. Testing MACs, Params and Memory
+### 4. Testing MACs, Params and Memory
 
 * Pre-trained
 ```
