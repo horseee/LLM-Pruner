@@ -175,8 +175,16 @@ def main(args):
         ),
     )
     model.config.use_cache = False
+    old_state_dict = model.state_dict
+    model.state_dict = (
+        lambda self, *_, **__: get_peft_model_state_dict(
+            self, old_state_dict()
+        )
+    ).__get__(model, type(model))
+
     trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
 
+    model.state_dict = old_state_dict
     model.save_pretrained(args.output_dir)
 
 
