@@ -14,10 +14,10 @@
   <a href="https://github.com/facebookresearch/llama">
     <img src="https://img.shields.io/badge/LLMs-LLaMA-FFB000.svg?style=flat-square" alt="LLaMA">
   </a>
-  <a href="https://github.com/vicuna">
+  <a href="https://github.com/lm-sys/FastChat">
     <img src="https://img.shields.io/badge/LLMs-Vicuna-924E7D.svg?style=flat-square" alt="Vicuna">
   </a>
-  <a href="https://github.com/chatGLM">
+  <a href="https://github.com/THUDM/ChatGLM-6B">
     <img src="https://img.shields.io/badge/LLMs-chatGLM-6082B6.svg?style=flat-square" alt="chatGLM">
   </a>
 </div>
