@@ -32,7 +32,7 @@
 </p>
 
 
-> **LLM-Pruner: On the Structural Pruning of Large Language Models** [[Paper]](https://arxiv.org/pdf/2305.11627.pdf)   
+> **LLM-Pruner: On the Structural Pruning of Large Language Models** [[arXiv]](https://arxiv.org/abs/2305.11627)   
 > *Xinyin Ma, Gongfan Fang, Xinchao Wang*   
 > *National University of Singapore*  
 
