@@ -12,7 +12,7 @@
     <img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-4E94CE.svg">
   </a>
   <a href="https://pytorch.org/">
-    <img src="https://img.shields.io/badge/PyTorch-%3E=v1.8.1-EE4C2C.svg?style=flat-square" alt="PyTorch>=v1.8.1">
+    <img src="https://img.shields.io/badge/PyTorch-%3E=v1.7.1-EE4C2C.svg?style=flat-square" alt="PyTorch>=v1.7.1">
   </a>
   <a href="https://github.com/facebookresearch/llama">
     <img src="https://img.shields.io/badge/LLMs-LLaMA-FFB000.svg?style=flat-square" alt="LLaMA">
