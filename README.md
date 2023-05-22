@@ -156,8 +156,8 @@ python test_speedup.py --model_type pretrain
 python test_speedup.py --model_type pruneLLM --ckpt <YOUR_MODEL_PATH_FOR_PRUNE_MODEL>
 ```
 
-## Zero-shot Evaluation Results
-A brief quantitative results of LLM-Pruner for LLaMA-7B:
+## Zero-shot Evaluation
+A brief quantitative results for LLaMA-7B:
 
 <p align="center">
 <img src="figures/LLaMAResults.png" width="100%"> <br>
@@ -175,7 +175,7 @@ The results for ChatGLM-6B:
 <img src="figures/ChatGLMResults.png" width="80%"> <br>
 </p>
 
-Statistics for these pruned models:
+Statistics for pruned models:
 
 <p align="center">
 <img src="figures/statistic.png" width="50%"> <br>
