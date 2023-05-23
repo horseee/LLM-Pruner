@@ -43,7 +43,7 @@
 - [x] **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
 
 #### Supported LLMs:
-- [x] [LLaMA-7B HuggingFace](https://huggingface.co/docs/transformers/main/model_doc/llama)
+- [x] [LLaMA-7B Hugging Face](https://huggingface.co/docs/transformers/main/model_doc/llama)
 - [x] [Vicuna-7B Official](https://github.com/lm-sys/FastChat)
 
 #### TODO List:
