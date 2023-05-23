@@ -154,13 +154,13 @@ def main(args):
             "iterative_steps": args.iterative_steps,
             "ch_sparsity": args.pruning_ratio, # remove 50% channels, ResNet18 = {64, 128, 256, 512} => ResNet18_Half = {32, 64, 128, 256}
             "ignored_layers":[],
-            "round_to": model.config.num_attention_heads * 2,
+            #"round_to": model.config.num_attention_heads * 2,
             "channel_groups": {
-                layer.self_attn: layer.self_attn.num_heads for layer in model.model.layers
+                #layer.self_attn: layer.self_attn.num_heads for layer in model.model.layers
             },
             "customized_pruners": {
                 LlamaRMSNorm: llama_pruner.hf_rmsnorm_pruner,
-                LlamaAttention: llama_pruner.hf_attention_pruner,
+                #LlamaAttention: llama_pruner.hf_attention_pruner,
             },
             "root_module_types": [LlamaRMSNorm, LlamaAttention],
         }
