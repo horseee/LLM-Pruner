@@ -136,7 +136,9 @@ For the pruned model, simply use the following command to load your model.
   pruned_dict = torch.load(YOUR_CHECKPOINT_PATH, map_location='cpu')
   tokenizer, model = pruned_dict['tokenizer'], pruned_dict['model']
 ```
-Since the pruned has different configuration in each layer, like some layers might be wider but some layers have been pruned more, the model cannot be loaded with the `.from_pretrained()` in Hugging Face. Currently, we simply use the `torch.save` to save the pruned model.
+Due to the different configurations between modules in the pruned model, where certain layers may have larger width while others have undergone more pruning, it becomes impractical to load the model using the `.from_pretrained()` as provided by Hugging Face. Currently, we employ the `torch.save` to store the pruned model.
+  
+Since the pruned model has different configuration in each layer, like some layers might be wider but some layers have been pruned more, the model cannot be loaded with the `.from_pretrained()` in Hugging Face. Currently, we simply use the `torch.save` to save the pruned model and `torch.load` to load the pruned model.
   
 #### Generation with Gradio Interface
 We provide a simple script to geneate texts using pre-trained / pruned models / pruned models with post-training. 
