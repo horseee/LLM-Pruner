@@ -51,6 +51,7 @@
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] A tutorial for pruning new LLMs.
 - [ ] Scaling up the finetuning with large-scale corpus.
+- [ ] Support `.from_pretrained()` for loading the mode.
 
 ## Quick Start
 
@@ -128,7 +129,17 @@ Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in 
 
 ### 3. Generation
 
-Geneate texts with pre-trained or pruned models.
+#### How to load the model:
+
+For the pruned model, simply use the following command to load your model. 
+``` 
+  pruned_dict = torch.load(YOUR_CHECKPOINT_PATH, map_location='cpu')
+  tokenizer, model = pruned_dict['tokenizer'], pruned_dict['model']
+```
+Since the pruned has different configuration in each layer, like some layers might be wider but some layers have been pruned more, the model cannot be loaded with the `.from_pretrained()` in Hugging Face. Currently, we simply use the `torch.save` to save the pruned model.
+  
+#### Generation with Gradio Interface
+We provide a simple script to geneate texts using pre-trained / pruned models / pruned models with post-training. 
     
 * LLaMA-7B Pre-trained
 ```
