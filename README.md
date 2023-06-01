@@ -129,7 +129,7 @@ Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in 
 
 ### 3. Generation
 
-#### How to load the model:
+#### How to load pruned/pre-trained models:
 
 For the pruned model, simply use the following command to load your model. 
 ``` 
