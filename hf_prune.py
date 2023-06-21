@@ -124,7 +124,7 @@ def main(args):
         for i in range(args.iterative_steps):
 
             if pruner_type in ['taylor']:
-                example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64)
+                example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64).to(args.device)
                 logger.log("Start Backwarding in iterative steps = {}...".format(i))
                 loss = model(example_prompts, labels=example_prompts).loss
                 logger.log("Loss = {}".format(loss))
