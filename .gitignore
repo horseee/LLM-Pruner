@@ -16,6 +16,7 @@ log.txt
 *_log
 *.log
 
+lm-evaluation-harness
 flagged/
 script/
 wandb

@@ -245,7 +245,6 @@ class TaylorImportance(tp.importance.Importance):
             layer = dep.target.module
             prune_fn = dep.handler
 
-           
             if prune_fn not in [
                 tp.prune_linear_out_channels, tp.prune_linear_in_channels, 
                 hf_rmsnorm_pruner.prune_out_channels, tp.prune_embedding_out_channels, hf_attention_pruner.prune_out_channels,
@@ -257,83 +256,71 @@ class TaylorImportance(tp.importance.Importance):
                 salience = {}
                 for sub_layer in [layer.o_proj, layer.q_proj, layer.k_proj, layer.v_proj]:
                     salience[sub_layer] = sub_layer.weight * sub_layer.weight.grad
+                    
+                    if self.taylor in ['param_second']:
+                        salience[sub_layer] = sub_layer.weight * sub_layer.weight.acc_grad * sub_layer.weight
+                    elif self.taylor in ['param_mix']: 
+                        salience[sub_layer] = -salience + 0.5 * sub_layer.weight * sub_layer.weight.acc_grad * sub_layer.weight   
             else:
-                w = layer.weight
-                grad = layer.weight.grad
-                salience = grad
+                salience = layer.weight * layer.weight.grad
 
+                if self.taylor in ['param_second']:
+                    salience = layer.weight * layer.weight.acc_grad * layer.weight
+                elif self.taylor in ['param_mix']: 
+                    salience = -salience + 0.5 * layer.weight * layer.weight.acc_grad * layer.weight
+                    
             # Linear out_channels
             if prune_fn in [tp.prune_linear_out_channels, hf_linear_pruner.prune_out_channels]:
                 if self.taylor == 'vectorize':
                     local_norm = salience.sum(1).abs()
-                elif self.taylor == 'param_second':
-                    local_norm = salience.pow(2).sum(1)
-                elif self.taylor == 'param_first':
-                    local_norm = salience.abs().sum(1) 
-                elif self.taylor == 'param_mix':
-                    local_norm = (salience + 0.5*salience*salience).abs().sum(1) 
+                elif 'param' in self.taylor:
+                    local_norm = salience.abs().sum(1)
                 else:
                     raise NotImplementedError
-                
                 group_imp.append(local_norm)
+
             # Linear in_channels
             elif prune_fn in [tp.prune_linear_in_channels, hf_linear_pruner.prune_in_channels]:
                 if self.taylor == 'vectorize':
                     local_norm = salience.sum(0).abs()
-                elif self.taylor == 'param_second':
-                    local_norm = salience.pow(2).sum(0)
-                elif self.taylor == 'param_first':
+                elif 'param' in self.taylor:
                     local_norm = salience.abs().sum(0)
-                elif self.taylor == 'param_mix':
-                    local_norm = (salience + 0.5*salience*salience).abs().sum(0)
                 else:
                     raise NotImplementedError
-
                 local_norm = local_norm[idxs]
                 group_imp.append(local_norm)
+
             # RMSNorm
             elif prune_fn == hf_rmsnorm_pruner.prune_out_channels:
                 local_norm = salience.abs()
                 group_imp.append(local_norm)
+
             # Embedding
             elif prune_fn == tp.prune_embedding_out_channels:
                 if self.taylor == 'vectorize':
                     local_norm = salience[:, idxs].sum(0).abs()
-                elif self.taylor == 'param_second':
-                    local_norm = salience[:, idxs].pow(2).sum(0)
-                elif self.taylor == 'param_first':
+                elif 'param' in self.taylor:
                     local_norm = salience[:, idxs].abs().sum(0)
-                elif self.taylor == 'param_mix':
-                    idx_salience = salience[:, idxs]
-                    local_norm = (idx_salience + 0.5*idx_salience*idx_salience).abs().sum(0)
                 else:
                     raise NotImplementedError
-
                 group_imp.append(local_norm)
+                
             # Attention
             elif prune_fn == hf_attention_pruner.prune_out_channels:
                 local_norm = 0
                 for sub_layer in [layer.o_proj]: #linear out channel, first dim in linear.weight
                     if self.taylor == 'vectorize':
                         local_norm += salience[sub_layer].sum(1).abs()
-                    elif self.taylor == 'param_second':
-                        local_norm += salience[sub_layer].pow(2).sum(1)   
-                    elif self.taylor == 'param_first':
+                    elif 'param' in self.taylor: 
                         local_norm += salience[sub_layer].abs().sum(1)   
-                    elif self.taylor == 'param_mix':
-                        local_norm += (salience[sub_layer] + 0.5*salience[sub_layer] * salience[sub_layer]).abs().sum(1)   
                     else:
                         raise NotImplementedError                
                 
                 for sub_layer in [layer.q_proj, layer.k_proj, layer.v_proj]: # linear in channel, second dim in linear.weight
                     if self.taylor == 'vectorize':
-                        local_norm += salience[sub_layer].sum(0).abs()
-                    elif self.taylor == 'param_second':
-                        local_norm += salience[sub_layer].pow(2).sum(0)   
-                    elif self.taylor == 'param_first':
+                        local_norm += salience[sub_layer].sum(0).abs() 
+                    elif 'param' in self.taylor == 'param':
                         local_norm += salience[sub_layer].abs().sum(0)
-                    elif self.taylor == 'param_mix':
-                        local_norm += (salience[sub_layer] + 0.5*salience[sub_layer] * salience[sub_layer]).abs().sum(0)
                     else:
                         raise NotImplementedError
                 group_imp.append(local_norm)

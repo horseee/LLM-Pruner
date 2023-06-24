@@ -3,6 +3,7 @@ import gc
 import sys
 import time
 import json
+import copy
 import random
 import argparse
 from typing import Tuple
@@ -124,8 +125,24 @@ def main(args):
         for i in range(args.iterative_steps):
 
             if pruner_type in ['taylor']:
-                example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64).to(args.device)
+                example_prompts = get_examples('bookcorpus', tokenizer, args.num_examples, seq_len = 64).to(args.device)
                 logger.log("Start Backwarding in iterative steps = {}...".format(i))
+                if args.taylor in ['param_mix', 'param_second']:
+                    for j in range(args.num_examples):
+                        batch_input = example_prompts[j].unsqueeze(0)
+                        loss = model(batch_input, labels=batch_input).loss
+                        logger.log("Loss = {}".format(loss))
+                        loss.backward()
+
+                        for module_param in model.parameters():
+                            module_param.grad = module_param.grad * module_param.grad / args.num_examples
+                            if hasattr(module_param, 'acc_grad'):
+                                module_param.acc_grad += module_param.grad
+                            else:
+                                module_param.acc_grad = copy.deepcopy(module_param.grad)
+                        model.zero_grad()
+                        del loss.grad
+                    
                 loss = model(example_prompts, labels=example_prompts).loss
                 logger.log("Loss = {}".format(loss))
                 loss.backward()
@@ -279,7 +296,8 @@ if __name__ == "__main__":
     parser.add_argument('--iterative_steps', type=int, default=1, help="Iteration step for pruning. Default=1")
     parser.add_argument('--grouping_strategy', type=str, default='sum', help='Reduce method for grouping')
     parser.add_argument('--global_pruning', action='store_true', help='whether global pruning')
-    parser.add_argument('--taylor', type=str, default='param_mix', help='choose from [vectorize, param_second, param_first, param_mix]')
+    parser.add_argument('--taylor', type=str, default='param_first', help='choose from [vectorize, param_second, param_first, param_mix]')
+    parser.add_argument('--num_examples', type=int, default=10)
 
     # general argument
     parser.add_argument('--device', type=str, default="cuda", help='device')
