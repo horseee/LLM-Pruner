@@ -267,7 +267,7 @@ class TaylorImportance(tp.importance.Importance):
                 if self.taylor in ['param_second']:
                     salience = layer.weight * layer.weight.acc_grad * layer.weight
                 elif self.taylor in ['param_mix']: 
-                    salience = -salience + 0.5 * layer.weight * layer.weight.acc_grad * layer.weight
+                    salience = salience - 0.5 * layer.weight * layer.weight.acc_grad * layer.weight
                     
             # Linear out_channels
             if prune_fn in [tp.prune_linear_out_channels, hf_linear_pruner.prune_out_channels]:
@@ -304,7 +304,7 @@ class TaylorImportance(tp.importance.Importance):
                 else:
                     raise NotImplementedError
                 group_imp.append(local_norm)
-                
+
             # Attention
             elif prune_fn == hf_attention_pruner.prune_out_channels:
                 local_norm = 0
