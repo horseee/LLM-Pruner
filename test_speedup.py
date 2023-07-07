@@ -61,22 +61,30 @@ def main(args):
         model.half()
         model = model.cuda()
     
-    forward_prompts = torch.tensor([
-        [    1,   306,  4658,   278,  6593,   310,  2834,   338],
-        [    1,  3439, 17632,  1925, 29892,   278,  6368,   310],
-    ])
-    with torch.cuda.device(0):
-        macs, params = get_model_complexity_info(model, (64,), as_strings=True,
-                                                 print_per_layer_stat=True, verbose=True,
-                                                 custom_modules_hooks={
-                                                    LlamaAttention: LlamaAttention_counter_hook,
-                                                    LlamaRMSNorm: rmsnorm_flops_counter_hook,
-                                                    SiLUActivation: pool_flops_counter_hook,
-                                                 },)
-        print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
-        print('{:<30}  {:<8}'.format('Number of parameters: ', params))
+        with torch.cuda.device(0):
+            macs, params = get_model_complexity_info(model, (64,), as_strings=True,
+                                                    print_per_layer_stat=True, verbose=True,
+                                                    custom_modules_hooks={
+                                                        LlamaAttention: LlamaAttention_counter_hook,
+                                                        LlamaRMSNorm: rmsnorm_flops_counter_hook,
+                                                        SiLUActivation: pool_flops_counter_hook,
+                                                    },)
+    else:
+        model.float()
+        def input_constructor(x):
+            return {'input_ids': torch.ones(x).long()}
+        macs, params = get_model_complexity_info(model, (1, 64,), as_strings=True,
+                                                    input_constructor = input_constructor,
+                                                    print_per_layer_stat=True, verbose=True,
+                                                    custom_modules_hooks={
+                                                        LlamaAttention: LlamaAttention_counter_hook,
+                                                        LlamaRMSNorm: rmsnorm_flops_counter_hook,
+                                                        SiLUActivation: pool_flops_counter_hook,
+                                                    },)
 
-    print("Memory Requirement: {} MiB\n".format(torch.cuda.memory_allocated()/1024/1024))
+    print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
+    print('{:<30}  {:<8}'.format('Number of parameters: ', params))
+    print("GPU Memory Requirement: {} MiB\n".format(torch.cuda.memory_allocated()/1024/1024))
 
 
 if __name__ == "__main__":
