@@ -57,12 +57,16 @@ def main(args):
     else:
         raise NotImplementedError
 
+    def input_constructor(x):
+        return {'input_ids': torch.ones(x).long().to(device)}
+
     if device == "cuda":
         model.half()
         model = model.cuda()
     
         with torch.cuda.device(0):
-            macs, params = get_model_complexity_info(model, (64,), as_strings=True,
+            macs, params = get_model_complexity_info(model, (1, 64,), as_strings=True,
+                                                    input_constructor = input_constructor,
                                                     print_per_layer_stat=True, verbose=True,
                                                     custom_modules_hooks={
                                                         LlamaAttention: LlamaAttention_counter_hook,
@@ -71,8 +75,6 @@ def main(args):
                                                     },)
     else:
         model.float()
-        def input_constructor(x):
-            return {'input_ids': torch.ones(x).long()}
         macs, params = get_model_complexity_info(model, (1, 64,), as_strings=True,
                                                     input_constructor = input_constructor,
                                                     print_per_layer_stat=True, verbose=True,
