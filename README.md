@@ -50,7 +50,7 @@
 - [ ] Code for the [Official LLaMA-7B](https://github.com/facebookresearch/llama)
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] A tutorial for pruning new LLMs.
-- [ ] Scaling up the finetuning with large-scale corpus.
+- [ ] Scaling up the finetuning with large-scale corpus. (Update: Some initial experimental results can be found [here](https://github.com/horseee/LLM-Pruner/issues/9#issuecomment-1633983253))
 - [ ] Support `.from_pretrained()` for loading the mode.
 
 ## Quick Start
