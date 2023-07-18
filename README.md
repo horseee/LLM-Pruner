@@ -20,6 +20,9 @@
   <a href="https://github.com/THUDM/ChatGLM-6B">
     <img src="https://img.shields.io/badge/LLMs-chatGLM-6082B6.svg?style=flat-square" alt="chatGLM">
   </a>
+    <a href="https://github.com/baichuan-inc/Baichuan-7B">
+    <img src="https://img.shields.io/badge/LLMs-Baichuan-78ac62.svg?style=flat-square" alt="Baichuan">
+  </a>
 </div>
 <h3>On the Structural Pruning of Large Language Models<h3>
 :llama: :llama: :llama: :llama: :llama: Compress your LLMs to any size! :llama: :llama: :llama: :llama: :llama:
