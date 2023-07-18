@@ -78,7 +78,6 @@ class MagnitudeImportance(tp.importance.Importance):
                 group_imp.append(local_norm)
             # Linear in_channels
             elif prune_fn in [tp.prune_linear_in_channels]:    
-                print(layer, dep, len(w))
                 w = layer.weight
                 local_norm = w.abs().pow(self.p).sum(0)
                 local_norm = local_norm[idxs]

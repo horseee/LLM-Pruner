@@ -572,6 +572,7 @@ class BaiChuanForCausalLM(PreTrainedModel):
             output_hidden_states: Optional[bool] = None,
             return_dict: Optional[bool] = None,
             build_dp: Optional[bool] = False,
+            **kwargs
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         r"""
         Args:

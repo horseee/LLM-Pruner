@@ -838,7 +838,7 @@ class DependencyGraph(object):
             
             if node.type == ops.OPTYPE.SPLIT:
                 grad_fn = node.grad_fn
-                if hasattr(grad_fn, '_saved_self_sizes'):
+                if hasattr(grad_fn, '_saved_self_sizes') and grad_fn._saved_dim < 10: # Avoid illegal value in grad_fn._saved_dim in pytorch 1.11. The value of grad_fn._saved_dim is sometimes even larger than 1e10.
                     if hasattr(grad_fn, '_saved_split_sizes') and hasattr(grad_fn, '_saved_dim') :
                         if grad_fn._saved_dim != 1:
                             continue

@@ -13,7 +13,9 @@ import numpy as np
 from transformers import GenerationConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from LLMPruner.models.hf_baichuan.modeling_baichuan import BaiChuanForCausalLM
+from LLMPruner.models.hf_baichuan.baichuan7B.modeling_baichuan_7B import BaiChuanForCausalLM as BaiChuan7B
+from LLMPruner.models.hf_baichuan.baichuan13B.modeling_baichuan_13B import BaichuanForCausalLM as BaiChuan13B
+
 #from LLMPruner.models.hf_llama.modeling_llama import LlamaRMSNorm, LlamaAttention, LlamaMLP
 
 import LLMPruner.torch_pruning as tp 
@@ -40,12 +42,21 @@ def main(args):
     )
 
     tokenizer = AutoTokenizer.from_pretrained(
-        'baichuan-inc/Baichuan-7B', use_fast=False, trust_remote_code=True
+        'baichuan-inc/Baichuan-13B-chat', use_fast=False, trust_remote_code=True
     ) 
-    model = BaiChuanForCausalLM.from_pretrained(
-        args.base_model, trust_remote_code=True,
-        low_cpu_mem_usage=True if args.torch_version >=1.9 else False
-    ) 
+    if '7B' in args.base_model:
+        model = BaiChuan7B.from_pretrained(
+            args.base_model, trust_remote_code=True,
+            low_cpu_mem_usage=True if args.torch_version >=1.9 else False
+        )
+    elif '13B' in args.base_model:
+        model = BaiChuan13B.from_pretrained(
+            args.base_model, trust_remote_code=True,
+            low_cpu_mem_usage=True if args.torch_version >=1.9 else False
+        )
+        model.generation_config = GenerationConfig.from_pretrained(args.base_model)
+    else:
+        raise NotImplementedError("Only support 7B and 13B model")
 
     if args.device == "cuda":
         model.half()
@@ -59,6 +70,8 @@ def main(args):
             pred = model.generate(**inputs, max_new_tokens=64,repetition_penalty=1.1)
             response = tokenizer.decode(pred.cpu()[0], skip_special_tokens=True)
             logger.log(response)
+    
+    
     
     pruner_type = args.pruner_type.lower()
     assert pruner_type in ['random', 'l2', 'l1', 'taylor']
@@ -155,13 +168,27 @@ def main(args):
 
             after_pruning_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
             logger.log("After Iter {}/{}, #parameters: {}".format(i+1, args.iterative_steps, after_pruning_parameters))
-        
+
+            # Store the pruning history for the attention head
+            buffer = None
+            if '13B' in args.base_model:
+                buffer = {}
+                for module in pruner.pruning_history():
+                    if 'W_pack' in module[0]:
+                        layer_idx = int(module[0].split('.')[2])
+                        head_dim = model.model.layers[layer_idx].self_attn.head_dim
+                        num_head = model.model.layers[layer_idx].self_attn.num_heads
+
+                        sort_idx = sorted(module[-1])
+                        sort_idx = sort_idx[:len(sort_idx)//3:head_dim]
+                        head_idx = [idx // head_dim for idx in sort_idx]
+                        buffer[layer_idx] = [i for i in range(num_head) if i not in head_idx]
+
             # modify inferece-related attributes
             for layer in model.model.layers:
                 layer.self_attn.hidden_size = layer.self_attn.W_pack.weight.shape[0] // 3
                 layer.self_attn.num_heads = layer.self_attn.hidden_size // layer.self_attn.head_dim
 
-        print(model)
         # Clean the gradient in the model
         model.zero_grad()
         for name, module in model.named_parameters():
@@ -172,7 +199,6 @@ def main(args):
     elif args.layer_wise:
         model.model.layers = model.model.layers[:args.layer]
         after_pruning_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
-
     else:
         raise NotImplementedError
     logger.log("#Param before: {}, #Param after: {}, Ratio = {:.4f}%".format(before_pruning_parameters, after_pruning_parameters,  100.0*after_pruning_parameters/before_pruning_parameters))
@@ -181,18 +207,18 @@ def main(args):
     torch.cuda.empty_cache()
 
     if args.save_model:
-        model.half()
-        model.save_pretrained(
-            logger.best_checkpoint_path,
-        )
-        #torch.save({
-        #    'model': model, 
-        #    'tokenizer': tokenizer,
-        #}, logger.best_checkpoint_path)
+        torch.save({
+            'model': model, 
+            'tokenizer': tokenizer,
+            'buffer': buffer
+        }, logger.best_checkpoint_path)
     
     if args.eval_device != "cpu":
         model.half()
     model.to(args.eval_device)
+
+    # pass the pruning idx for head to model
+    model.model.mask_head_idx = buffer
 
     if args.test_after_train:
         logger.log("\n==================Generation Results After Pruning================\n")
