@@ -60,6 +60,12 @@
 - [ ] Scaling up the finetuning with large-scale corpus. (Update: Some initial experimental results can be found [here](https://github.com/horseee/LLM-Pruner/issues/9#issuecomment-1633983253))
 - [ ] Support `.from_pretrained()` for loading the mode.
 
+#### Contact Us:
+
+Join our Telegram or Wechat group for discussions:
+* Telegram: https://t.me/+NwjbBDN2ao1lZjZl
+* WeChat: <img width="100" alt="image" src="https://github.com/VainF/Torch-Pruning/assets/18592211/41cd9bf9-13e3-45b2-919e-bb067fc14377">
+
 ## Quick Start
 
 ### Installation
