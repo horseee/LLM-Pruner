@@ -43,12 +43,13 @@
 - [x] **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
 
 #### Supported LLMs:
-- [x] [LLaMA-7B Hugging Face](https://huggingface.co/docs/transformers/main/model_doc/llama)
-- [x] [Vicuna-7B Official](https://github.com/lm-sys/FastChat)
-- [x] [Baichuan-7B](https://github.com/baichuan-inc/Baichuan-7B)
+- [x] [LLaMA-7B Hugging Face](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
+- [x] [Vicuna-7B Official](https://github.com/horseee/LLM-Pruner#llama-vicuna-pruning)
+- [x] [Baichuan-7B Official](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
 
 #### Updates:
-* July 18, 2023: Support LLM-Pruner on Baichuan
+* July 18, 2023: :rocket: Support LLM-Pruner on Baichuan
+* May 20, 2023: :tada: Code and Preprint Paper released! 
 
 #### TODO List:
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
