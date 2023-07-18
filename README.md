@@ -40,18 +40,18 @@
 > *National University of Singapore*  
 
 #### Why LLM-Pruner
-- [x] **Task-agnostic compression**: The compressed LLM should retains its original ability as a multi-task solver. 
+- [x] **Task-agnostic compression**: The compressed LLM should retain its original ability as a multi-task solver. 
 - [x] **Less training corpus**: In this work, we use only 50k publicly available samples (alpaca) to post-train the LLM.  
 - [x] **Efficient compression**: 3 minutes for pruning and 3 hours for post-training. (You can make it longer)
 - [x] **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
 
 #### Supported LLMs:
-- [x] [LLaMA-7B Hugging Face](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
-- [x] [Vicuna-7B Official](https://github.com/horseee/LLM-Pruner#llama-vicuna-pruning)
-- [x] [Baichuan-7B Official](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
+- [x] [LLaMA Hugging Face](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
+- [x] [Vicuna Official](https://github.com/horseee/LLM-Pruner#llama-vicuna-pruning)
+- [x] [Baichuan Official](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
 
 #### Updates:
-* July 18, 2023: :rocket: Support LLM-Pruner on Baichuan
+* July 18, 2023: :rocket: Support [Baichuan](https://github.com/baichuan-inc/Baichuan-7B), a bilingual LLM.
 * May 20, 2023: :tada: Code and Preprint Paper released! 
 
 #### TODO List:
@@ -62,7 +62,7 @@
 
 #### Contact Us:
 
-Join our Telegram or Wechat group for discussions:
+Join our Telegram or WeChat group for discussions:
 * Telegram: https://t.me/+NwjbBDN2ao1lZjZl
 * WeChat: <img width="100" alt="image" src="https://github.com/VainF/Torch-Pruning/assets/18592211/41cd9bf9-13e3-45b2-919e-bb067fc14377">
 
@@ -121,7 +121,13 @@ python hf_prune.py --pruning_ratio 0.25 \
       --save_ckpt_log_name llama_prune \
       --base_model PATH_TO_VICUNA_WEIGHTS
 ```
-    
+
+
+#### :llama: Baichuan Pruning
+
+Please refer to the [Example/Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning) for more details
+
+
 #### :llama: ChatGLM Pruning
 Comming Soon...
     
@@ -138,6 +144,7 @@ python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_mode
       --wandb_project llama_tune
 ```
 Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in step 1, and replace `PATH_TO_SAVE_TUNE_MODEL` with the desired location where you want to save the tuned model.
+
 
 
 ### 3. Generation
@@ -187,6 +194,7 @@ python test_speedup.py --model_type pruneLLM --ckpt <YOUR_MODEL_PATH_FOR_PRUNE_M
 ```
 
 ## Zero-shot Evaluation
+
 A brief quantitative results for LLaMA-7B:
 
 <p align="center">
@@ -213,7 +221,6 @@ Statistics for pruned models:
 
 More results can be found in the paper. 
 
-
 ## More Examples
 
 | Original Model | Output | Pruned Model |  Output |
@@ -222,8 +229,6 @@ More results can be found in the paper.
 | Vicuna-7B | <u>10 steps to build an ios app:</u> 1. Research and develop the idea. 2. Decide on the platform you want to use (iOS, Android, or both). 3. Create a plan and budget. 4. Hire a team of developers. 5. Design the user interface (UI). 6. Develop the user interface (UI). 7. Test and iterate on the app. 8. Submit the app to the app store. 9. Optimize the app for performance and user experience (UX). 10. Market and promote the app. | Vicuna-5.4B | <u>10 steps to build an ios app:</u> 1. Plan your app: decide what it should do, what it will look like, and what it will cost to build it. 2. Hire a developer: A good iOS developer will help you design the user interface, create the app, and make sure it’s bug-free. 3. Create a user interface: This is where the magic happens. Your app’s user interface will be designed and mocked up at this point... |
 | ChatGLM-6B | <u>Write a poetry about love and peace.</u> In the midst of life's hustle and bustle, I find your love a soothing peace. It is a feeling that cannot be conveyed, A connection that cannot be distanced. With your smile, your eyes, your embrace, I feel a sense of belonging that only you can give. It is a love that lasts forever, A love that cannot be defeat... | ChatGLM-5.6B | <u>Write a poetry about love and peace.</u> Love and peace, two such wonderful things\ A pure and endless desire in my heart\ And both of them, I must seek for\ A long, long time, I know..\ Love, I know, is a feeling of being\ A perfect partner, in every sense\ And peace, I need it, so much, one day\ A long, long way, my heart will go..|
 
-  
-  
 ## Limitations
 * Although we only used 50K data and trained for three hours, more data would definitely be better. We are testing on this.
 * The current compressed model still has several issues, such as generating repetitive tokens or producing nonsensical sentences. We believe there is significant room for improvement in the quality of the compressed model.
