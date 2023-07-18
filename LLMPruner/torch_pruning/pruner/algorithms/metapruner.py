@@ -59,7 +59,9 @@ class MetaPruner:
         root_module_types: typing.List = [
             ops.TORCH_CONV, ops.TORCH_LINEAR, ops.TORCH_LSTM],  # root module for each group
         root_instances: typing.List = None,
+        forward_fn: typing.Callable = None,
         output_transform: typing.Callable = None,
+        enable_index_mapping: bool = False,
     ):
         self.model = model
         self.importance = importance
@@ -78,6 +80,7 @@ class MetaPruner:
         self.DG = dependency.DependencyGraph().build_dependency(
             model,
             example_inputs=example_inputs,
+            forward_fn=forward_fn,
             output_transform=output_transform,
             unwrapped_parameters=unwrapped_parameters,
             customized_pruners=customized_pruners,
@@ -127,7 +130,7 @@ class MetaPruner:
             if isinstance(m, ops.TORCH_GROUPNORM):
                 self.channel_groups[m] = m.num_groups
         
-        if self.global_pruning:
+        if self.global_pruning: # TODO: Support both ch_groups and consecutive_groups in a single forward
             initial_total_channels = 0
             for group in self.DG.get_all_groups(ignored_layers=self.ignored_layers, root_module_types=self.root_module_types, root_instances=self.root_instances):
                 ch_groups = self.get_channel_groups(group)
@@ -144,6 +147,10 @@ class MetaPruner:
                     initial_total_channels += self.DG.get_out_channels(group[0][0].target.module) 
                 
             self.initial_total_channels = initial_total_channels
+        
+        if enable_index_mapping:
+            for node in self.DG.module2node.values():
+                node.enable_index_mapping = True
     
     def pruning_history(self):
         return self.DG.pruning_history()

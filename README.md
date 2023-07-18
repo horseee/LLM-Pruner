@@ -45,9 +45,12 @@
 #### Supported LLMs:
 - [x] [LLaMA-7B Hugging Face](https://huggingface.co/docs/transformers/main/model_doc/llama)
 - [x] [Vicuna-7B Official](https://github.com/lm-sys/FastChat)
+- [x] [Baichuan-7B](https://github.com/baichuan-inc/Baichuan-7B)
+
+#### Updates:
+* July 18, 2023: Support LLM-Pruner on Baichuan
 
 #### TODO List:
-- [ ] Code for the [Official LLaMA-7B](https://github.com/facebookresearch/llama)
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] A tutorial for pruning new LLMs.
 - [ ] Scaling up the finetuning with large-scale corpus.
