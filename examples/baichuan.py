@@ -42,7 +42,7 @@ def main(args):
     )
 
     tokenizer = AutoTokenizer.from_pretrained(
-        'baichuan-inc/Baichuan-13B-chat', use_fast=False, trust_remote_code=True
+        args.base_model, use_fast=False, trust_remote_code=True
     ) 
     if '7B' in args.base_model:
         model = BaiChuan7B.from_pretrained(
