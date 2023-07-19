@@ -14,6 +14,9 @@
   <a href="https://github.com/facebookresearch/llama">
     <img src="https://img.shields.io/badge/LLMs-LLaMA-FFB000.svg?style=flat-square" alt="LLaMA">
   </a>
+  <a href="https://github.com/facebookresearch/llama">
+    <img src="https://img.shields.io/badge/LLMs-Llama2-FAB093.svg?style=flat-square" alt="Llama-2">
+  </a>
   <a href="https://github.com/lm-sys/FastChat">
     <img src="https://img.shields.io/badge/LLMs-Vicuna-924E7D.svg?style=flat-square" alt="Vicuna">
   </a>
