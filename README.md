@@ -96,7 +96,7 @@ After pruning and post-training, we follow <a href="https://github.com/EleutherA
     
 ### 1. Pruning (Discovery Stage + Estimation Stage)
     
-:llama: **LLaMA-7B pruning with ~20% parameters pruned:**
+:llama: **LLaMA/Llama-2 pruning with ~20% parameters pruned:**
 ```
 python hf_prune.py --pruning_ratio 0.25 \
       --block_wise \
