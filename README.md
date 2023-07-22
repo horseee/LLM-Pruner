@@ -69,7 +69,8 @@
 
 Join our Telegram or WeChat group for discussions:
 * Telegram: https://t.me/+NwjbBDN2ao1lZjZl
-* WeChat: <img width="100" alt="image" src="https://github.com/VainF/Torch-Pruning/assets/18592211/41cd9bf9-13e3-45b2-919e-bb067fc14377">
+* WeChat (Group size exceeded 200): <img width="100" alt="image" src="https://github.com/horseee/LLM-Pruner/assets/18592211/b01e7aae-c04e-41c8-b69a-4c992cf8c98e">
+
 
 ## Quick Start
 
