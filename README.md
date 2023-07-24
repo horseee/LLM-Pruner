@@ -195,7 +195,7 @@ The above instructions will deploy your LLMs locally.
 ### 4. Evaluation
 For evaluating the performance of the pruned model, we follow [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness) to evaluate the model:
 * Step 1: If you only need to evaluate the pruned model, then skip this step and jump to Step 2.
-This step is to arrange the files to satisfy the input requirement for `lm-evaluation-harness`. The [tuned checkpoint](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) would be save in the following format:
+This step is to arrange the files to satisfy the input requirement for `lm-evaluation-harness`. The [tuned checkpoint from the post-training step](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) would be save in the following format:
 ```
 - PATH_TO_SAVE_TUNE_MODEL
   | - checkpoint-200
@@ -221,7 +221,11 @@ If you want to evaluate the `checkpoint-200`, then set the epoch equalts to 200 
 * Step 2:
 ```
 export PYTHONPATH='.'
-python lm-evaluation-harness/main.py --model hf-causal-experimental --model_args checkpoint=PATH_TO_PRUNE_MODEL,peft=PATH_TO_SAVE_TUNE_MODEL,config_pretrained=PATH_OR_NAME_TO_BASE_MODEL --tasks openbookqa,arc_easy,winogrande,hellaswag,arc_challenge,piqa,boolq --device cuda:0 --no_cache --output_path PATH_TO_SAVE_EVALUATION_LOG
+python lm-evaluation-harness/main.py --model hf-causal-experimental \
+       --model_args checkpoint=PATH_TO_PRUNE_MODEL,peft=PATH_TO_SAVE_TUNE_MODEL,config_pretrained=PATH_OR_NAME_TO_BASE_MODEL \
+       --tasks openbookqa,arc_easy,winogrande,hellaswag,arc_challenge,piqa,boolq \
+       --device cuda:0 --no_cache \
+       --output_path PATH_TO_SAVE_EVALUATION_LOG 
 ```
 Here, replace `PATH_TO_PRUNE_MODEL` and `PATH_TO_SAVE_TUNE_MODEL` with the path you save the pruned model and the tuned model, and `PATH_OR_NAME_TO_BASE_MODEL` is for loading the configuration file of the base model. 
 
