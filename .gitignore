@@ -16,8 +16,17 @@ log.txt
 *_log
 *.log
 
-lm-evaluation-harness
 flagged/
 script/
 wandb
 log/
+tiny_*
+lora-*
+results
+
+# Ignore for lm-evaluation-harness
+env
+lm_cache
+.idea
+*.log
+*.egg-info

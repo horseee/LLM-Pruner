@@ -343,7 +343,7 @@ class PeftModel(PushToHubMixin, torch.nn.Module):
 
         # load weights if any
         path = os.path.join(model_id, kwargs["subfolder"]) if kwargs.get("subfolder", None) is not None else model_id
-        print(WEIGHTS_NAME)
+        print("Load from adapter:", WEIGHTS_NAME)
         if os.path.exists(os.path.join(path, WEIGHTS_NAME)):
             filename = os.path.join(path, WEIGHTS_NAME)
         else:
