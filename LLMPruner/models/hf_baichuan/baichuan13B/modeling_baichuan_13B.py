@@ -1,7 +1,7 @@
 # Copyright (c) 2023, Baichuan Intelligent Technology. All rights reserved.
 
 import math
-from typing import List, Optional, Tuple, Union, Dict
+from typing import List, Optional, Tuple, Union
 
 import torch
 import torch.utils.checkpoint
@@ -33,6 +33,7 @@ def _fill_with_neg_inf(t):
     return t.float().fill_(float("-inf")).type_as(t)
 
 def _gen_alibi_mask(n_head, max_pos):
+    """used in inference only"""
     slopes = torch.Tensor(_get_interleave(n_head))
     alibi = slopes.unsqueeze(1).unsqueeze(1) * torch.arange(max_pos).unsqueeze(0).unsqueeze(0).expand(
         n_head, -1, -1)
@@ -43,6 +44,15 @@ def _gen_alibi_mask(n_head, max_pos):
     alibi_mask = alibi_mask.unsqueeze(0) + alibi
     return alibi_mask
 
+def _buffered_future_mask(tensor, maxpos, alibi, attn_heads):
+    """used in training only"""
+    dim = tensor.size(1)
+    _future_mask = torch.triu(
+        _fill_with_neg_inf(torch.zeros([maxpos, maxpos])), 1
+    )   
+    _future_mask = _future_mask.unsqueeze(0) + alibi
+    _future_mask = _future_mask.to(tensor)
+    return _future_mask[:tensor.shape[0] * attn_heads, :maxpos, :maxpos]
 
 class RMSNorm(torch.nn.Module):
     def __init__(self, hidden_size, epsilon=1e-6):
@@ -59,7 +69,6 @@ class RMSNorm(torch.nn.Module):
             hidden_states = hidden_states.to(self.weight.dtype)
 
         return self.weight * hidden_states
-
 
 class MLP(torch.nn.Module):
     def __init__(
@@ -138,9 +147,12 @@ class BaichuanAttention(torch.nn.Module):
         attn_weights = torch.matmul(query_states, key_states.transpose(2, 3)) / math.sqrt(self.head_dim)
 
         if attention_mask is not None:
-            if attn_weights.size(-2) == 1:
-                attention_mask = attention_mask[:, -1:, :]
-            attn_weights = attn_weights + attention_mask.unsqueeze(0)
+            if q_len == 1: # inference with cache
+                if len(attention_mask.size()) == 4:
+                    attention_mask = attention_mask[:, :, -1:, :]   
+                else:
+                    attention_mask = attention_mask[:, -1:, :]     
+            attn_weights = attn_weights + attention_mask
             attn_weights = torch.max(attn_weights, torch.tensor(torch.finfo(attn_weights.dtype).min))
 
         attn_weights = torch.nn.functional.softmax(attn_weights, dim=-1)
@@ -229,7 +241,6 @@ class BaichuanPreTrainedModel(PreTrainedModel):
             module.gradient_checkpointing = value
 
 
-
 class BaichuanModel(BaichuanPreTrainedModel):
     def __init__(self, config: BaichuanConfig):
         super().__init__(config)
@@ -243,38 +254,47 @@ class BaichuanModel(BaichuanPreTrainedModel):
         self.gradient_checkpointing = config.gradient_checkpointing
         self.post_init()
         self.max_cache_pos = config.model_max_length
-        self.first_run = True    
+        self.first_run = True
+        self.alibi_mask = None
 
+        # For the removed mask for attention head
         self.mask_head_idx = None
 
     def get_input_embeddings(self):
         return self.embed_tokens
-        
+
     def set_input_embeddings(self, value):
         self.embed_tokens = value
-        
+
     def get_alibi_mask(self, tensor, seq_length_with_past):
-        if self.first_run:
-            self.first_run = False
-            self.register_buffer("future_mask", _gen_alibi_mask(self.n_head, self.max_cache_pos).to(tensor), persistent=False)
-        if seq_length_with_past > self.max_cache_pos:
-            self.max_cache_pos = seq_length_with_past
-            self.register_buffer("future_mask", _gen_alibi_mask(self.n_head, self.max_cache_pos).to(tensor), persistent=False)
-        mask = self.future_mask[:self.n_head, :seq_length_with_past, :seq_length_with_past] 
+        if self.training:
+            slopes = torch.Tensor(_get_interleave(self.n_head))
+            alibi = slopes.unsqueeze(1).unsqueeze(1) * torch.arange(seq_length_with_past).unsqueeze(0).unsqueeze(0).expand(
+                self.n_head,
+                -1, -1) 
+            alibi = alibi.view(self.n_head, 1, seq_length_with_past)
+            mask = _buffered_future_mask(tensor, seq_length_with_past, alibi, self.n_head)
+        else:
+            if self.first_run:
+                self.first_run = False
+                self.register_buffer("future_mask", _gen_alibi_mask(self.n_head, self.max_cache_pos).to(tensor), persistent=False)
+            if seq_length_with_past > self.max_cache_pos:
+                self.max_cache_pos = seq_length_with_past
+                self.register_buffer("future_mask", _gen_alibi_mask(self.n_head, self.max_cache_pos).to(tensor), persistent=False)
+            mask = self.future_mask[:self.n_head, :seq_length_with_past, :seq_length_with_past] 
         return mask
 
     def forward(
             self,
             input_ids: torch.LongTensor = None,
+            attention_mask: Optional[torch.Tensor] = None,
             past_key_values: Optional[List[torch.FloatTensor]] = None,
             inputs_embeds: Optional[torch.FloatTensor] = None,
             use_cache: Optional[bool] = False,
             output_attentions: Optional[bool] = False,
             output_hidden_states: Optional[bool] = False,
             return_dict: Optional[bool] = True,
-            buffer: Optional[Dict] = None,
     ) -> Union[Tuple, BaseModelOutputWithPast]:
-
 
         if input_ids is not None and inputs_embeds is not None:
             raise ValueError("You cannot provide both input_ids and inputs_embeds simultaneously")
@@ -285,6 +305,8 @@ class BaichuanModel(BaichuanPreTrainedModel):
         else:
             raise ValueError("You need to provide input_ids or inputs_embeds")
 
+        return_dict = return_dict if return_dict is not None else self.config.use_return_dict
+
         seq_length_with_past = seq_length
 
         if past_key_values is not None:
@@ -294,8 +316,28 @@ class BaichuanModel(BaichuanPreTrainedModel):
         if inputs_embeds is None:
             inputs_embeds = self.embed_tokens(input_ids)
 
-        # embed positions
-        attention_mask = self.get_alibi_mask(inputs_embeds, seq_length_with_past)
+        if self.training:
+            if self.alibi_mask is None or self.alibi_mask.shape[-1] != seq_length_with_past:
+                self.alibi_mask = self.get_alibi_mask(inputs_embeds, seq_length_with_past)
+            alibi_mask = self.alibi_mask
+        else:
+            alibi_mask = self.get_alibi_mask(inputs_embeds, seq_length_with_past)
+
+        if attention_mask is not None:
+            if len(attention_mask.shape) == 2:
+                expanded_mask = attention_mask.to(alibi_mask.dtype)
+                expanded_mask = torch.tril(torch.gt(expanded_mask[:, :, None] * expanded_mask[:, None, :], 0)
+                                ) * torch.eq(expanded_mask[:, :, None] - expanded_mask[:, None, :], 0)
+            else:
+                expanded_mask = attention_mask 
+            bsz = inputs_embeds.size(0)
+            src_len, tgt_len = alibi_mask.size()[-2:]
+            expanded_mask = expanded_mask.unsqueeze(1).expand(bsz, 1, src_len, tgt_len).to(alibi_mask.dtype)
+            inverted_mask = 1.0 - expanded_mask
+            inverted_mask = inverted_mask.masked_fill(inverted_mask.to(torch.bool), torch.finfo(alibi_mask.dtype).min)
+            attention_mask = inverted_mask + alibi_mask.unsqueeze(0)
+        else:
+            attention_mask = alibi_mask
 
         hidden_states = inputs_embeds
 
@@ -316,16 +358,16 @@ class BaichuanModel(BaichuanPreTrainedModel):
                 all_hidden_states += (hidden_states,)
 
             past_key_value = past_key_values[idx] if past_key_values is not None else None
-            
+
             # Remove mask if buffer is not None
             if self.mask_head_idx is not None and idx in self.mask_head_idx:
-                select_attention_mask = attention_mask[self.mask_head_idx[idx], :, :]
+                select_attention_mask = attention_mask[:, self.mask_head_idx[idx], :, :]
             else:
                 select_attention_mask = attention_mask
 
             if self.gradient_checkpointing and self.training:
 
-                def create_custom_forward(module):
+                def create_custom_forward(module): 
                     def custom_forward(*inputs):
                         # None for past_key_value
                         return module(*inputs, output_attentions, None)
@@ -370,7 +412,7 @@ class BaichuanModel(BaichuanPreTrainedModel):
             hidden_states=all_hidden_states,
             attentions=all_self_attns,
         )
-    
+
 
 class BaichuanForCausalLM(BaichuanPreTrainedModel):
     def __init__(self, config):
@@ -380,7 +422,7 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
 
         # Initialize weights and apply final processing
         self.post_init()
-        
+
     def get_input_embeddings(self):
         return self.model.embed_tokens
 
@@ -398,10 +440,11 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
 
     def get_decoder(self):
         return self.model
-        
+
     def forward(
             self,
             input_ids: torch.LongTensor = None,
+            attention_mask: Optional[torch.Tensor] = None,
             past_key_values: Optional[List[torch.FloatTensor]] = None,
             inputs_embeds: Optional[torch.FloatTensor] = None,
             labels: Optional[torch.LongTensor] = None,
@@ -412,17 +455,19 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
             **kwargs
     ) -> Union[Tuple, CausalLMOutputWithPast]:
 
-
+        return_dict = return_dict if return_dict is not None else self.config.use_return_dict
+        
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
         outputs = self.model(
             input_ids=input_ids,
+            attention_mask=attention_mask,
             past_key_values=past_key_values,
             inputs_embeds=inputs_embeds,
             use_cache=use_cache,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
-        )   
+        )
 
         hidden_states = outputs[0]
         logits = self.lm_head(hidden_states)
@@ -453,8 +498,13 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
         )
 
     def prepare_inputs_for_generation(
-            self, input_ids, past_key_values=None, attention_mask=None, inputs_embeds=None, **kwargs
-    ):  
+            self,
+            input_ids: torch.LongTensor,
+            past_key_values: Optional[torch.Tensor] = None,
+            attention_mask: Optional[torch.Tensor] = None,
+            inputs_embeds: Optional[torch.Tensor] = None,
+            **kwargs
+    ):
         if past_key_values:
             input_ids = input_ids[:, -1:]
 
@@ -465,11 +515,12 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
             model_inputs = {"input_ids": input_ids}
 
         model_inputs.update(
-            {   
+            {
                 "past_key_values": past_key_values,
                 "use_cache": kwargs.get("use_cache"),
-            }   
-        )   
+                "attention_mask": attention_mask
+            }
+        )
         return model_inputs
 
     @staticmethod
@@ -479,7 +530,6 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
             for layer_past in past_key_values
         )
 
-
     def quantize(self, bits: int):
         try:
             from .quantizer import QLinear
@@ -487,7 +537,7 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
             raise ImportError(
                 f"Needs QLinear to run quantize."
             )
-        
+
         for layer in self.model.layers:
             layer.self_attn.W_pack = QLinear(
                 bits=bits,
@@ -514,7 +564,7 @@ class BaichuanForCausalLM(BaichuanPreTrainedModel):
                 weight=layer.mlp.up_proj.weight,
                 bias = None,
             )
-        return self 
+        return self
 
     def _build_chat_input(self, tokenizer, messages: List[dict], max_new_tokens: int=0):
         max_new_tokens = max_new_tokens or self.generation_config.max_new_tokens

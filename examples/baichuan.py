@@ -69,9 +69,7 @@ def main(args):
             inputs = tokenizer('登鹳雀楼->王之涣\n夜雨寄北->', return_tensors='pt').to(args.device)
             pred = model.generate(**inputs, max_new_tokens=64,repetition_penalty=1.1)
             response = tokenizer.decode(pred.cpu()[0], skip_special_tokens=True)
-            logger.log(response)
-    
-    
+            logger.log(response)    
     
     pruner_type = args.pruner_type.lower()
     assert pruner_type in ['random', 'l2', 'l1', 'taylor']
@@ -183,6 +181,9 @@ def main(args):
                         sort_idx = sort_idx[:len(sort_idx)//3:head_dim]
                         head_idx = [idx // head_dim for idx in sort_idx]
                         buffer[layer_idx] = [i for i in range(num_head) if i not in head_idx]
+                
+                # pass the pruning idx for head to model
+                model.model.mask_head_idx = buffer
 
             # modify inferece-related attributes
             for layer in model.model.layers:
@@ -210,15 +211,11 @@ def main(args):
         torch.save({
             'model': model, 
             'tokenizer': tokenizer,
-            'buffer': buffer
         }, logger.best_checkpoint_path)
     
     if args.eval_device != "cpu":
         model.half()
     model.to(args.eval_device)
-
-    # pass the pruning idx for head to model
-    model.model.mask_head_idx = buffer
 
     if args.test_after_train:
         logger.log("\n==================Generation Results After Pruning================\n")
