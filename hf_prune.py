@@ -301,9 +301,9 @@ if __name__ == "__main__":
 
     # general argument
     parser.add_argument('--device', type=str, default="cuda", help='device')
-    parser.add_argument('--test_before_train', action='store_true', help='whether test after train')
+    parser.add_argument('--test_before_train', action='store_true', help='whether test before train')
     parser.add_argument('--eval_device', type=str, default="cuda", help='eval device')
-    parser.add_argument('--test_after_train', action='store_true', help='whether test before train')
+    parser.add_argument('--test_after_train', action='store_true', help='whether test after train')
 
     parser.add_argument('--seed', type=int, default=42, help='seed')
     parser.add_argument('--save_model', action='store_true', help='if save model')
