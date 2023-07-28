@@ -1,7 +1,7 @@
 # More LLMs
 
-* [Baichuan](#llama-baichuan-pruning)
-## :llama: Baichuan Pruning
+* [Baichuan](#llama-baichuan)
+## :llama: Baichuan
 
 * For pruning:
 1. Baichuan-7B:
@@ -45,7 +45,7 @@ python post_training.py \
        --output_dir tune_log/baichuan --wandb_project baichuan_tune 
 ```
 
-The minimum example for pruning Baichuan models are provided in the above instruction. For improved performance, the following modifications are essential:
+The minimum example for pruning Baichuan models is provided in the above instruction. For improved performance, the following modifications are essential:
 
-1. Adjust the calibration data used for calculating the pruning metric (Line 144 in baichuan.py), such as using a dialogue or some Chinese corpus.
-2. Try different chinese corpora during the recovery stage of the pruned model.
+1. Adjust the calibration data used for calculating the pruning metric ([Line 143](https://github.com/horseee/LLM-Pruner/blob/2d60e00c86d72788a182b505ce42334f42fcb933/examples/baichuan.py#L143) in baichuan.py), such as using dialogues or some Chinese corpus.
+2. Try different Chinese corpora during the recovery stage of the pruned model.
