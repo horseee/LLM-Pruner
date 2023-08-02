@@ -16,3 +16,4 @@ sqlitedict
 importlib-resources
 pycountry
 omegaconf
+pytablewriter
