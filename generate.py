@@ -4,7 +4,7 @@ import argparse
 import gradio as gr
 import torch
 import transformers
-from transformers import GenerationConfig, LlamaForCausalLM, LlamaTokenizer
+from transformers import GenerationConfig, AutoModelForCausalLM, AutoTokenizer
 
 from LLMPruner.peft import PeftModel
 
@@ -19,8 +19,8 @@ torch_version = int(torch.__version__.split('.')[1])
 
 def main(args):
     if args.model_type == 'pretrain':
-        tokenizer = LlamaTokenizer.from_pretrained(args.base_model)
-        model = LlamaForCausalLM.from_pretrained(
+        tokenizer = AutoTokenizer.from_pretrained(args.base_model)
+        model = AutoModelForCausalLM.from_pretrained(
             args.base_model,
             low_cpu_mem_usage=True if torch_version >=9 else False
         )

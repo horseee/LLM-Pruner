@@ -229,6 +229,15 @@ python lm-evaluation-harness/main.py --model hf-causal-experimental \
 ```
 Here, replace `PATH_TO_PRUNE_MODEL` and `PATH_TO_SAVE_TUNE_MODEL` with the path you save the pruned model and the tuned model, and `PATH_OR_NAME_TO_BASE_MODEL` is for loading the configuration file of the base model. 
 
+[Update]: We upload a script to simply the evaluation process if you want to evaluate the pruned model with the tuned checkpoint. Simply use the following command:
+```
+CUDA_VISIBLE_DEVICES=X bash scripts/eval_peft.sh PATH_OR_NAME_TO_BASE_MODEL PATH_TO_SAVE_TUNE_MODEL  PATH_TO_PRUNE_MODEL EPOCHS_YOU_WANT_TO_EVALUATE
+```
+Replace the necessary information of your model in the command. The final one is used to iterate over different epochs if you want to evaluate several checkpoints in one command. For example:
+```
+CUDA_VISIBLE_DEVICES=1 bash scripts/eval_peft.sh decapoda-research/llama-7b-hf tune_log/llama_7B_hessian prune_log/llama_prune_7B 200 1000 2000
+```
+
 
 ### 5. Testing MACs, Params and Memory
 
