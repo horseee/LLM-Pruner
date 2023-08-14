@@ -67,10 +67,9 @@
 
 #### Contact Us:
 
-Join our Telegram or WeChat group for discussions:
-* Telegram: https://t.me/+NwjbBDN2ao1lZjZl
-* WeChat (Group size exceeded 200): <img width="100" alt="image" src="https://github.com/horseee/LLM-Pruner/assets/18592211/b01e7aae-c04e-41c8-b69a-4c992cf8c98e">
-
+Join our Discord or WeChat group for a chat:
+  * Discord: [link](https://discord.gg/2CXnf5bN)
+  * WeChat (Group size exceeded 200): [QR Code](https://github.com/VainF/Torch-Pruning/assets/18592211/6c80e758-7692-4dad-b6aa-1e1877e72bf7)
 
 ## Quick Start
 
