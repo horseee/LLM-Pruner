@@ -55,6 +55,7 @@
 - [x] [Baichuan Official](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
 
 #### Updates:
+* August 14, 2023:  Code and results for finetuning with a large-scale corpus are now available. The fine-tuned LLaMA-5.4B model, with 20% parameter pruning, achieves a commendable accuracy of 62.36%, closely approaching the performance of the original LLaMA-7B.
 * July 19, 2023: :fire:  LLM-Pruner now supports Llama-2-7b and Llama-2-13b (the huggingface version) 
 * July 18, 2023: :rocket: Support [Baichuan](https://github.com/baichuan-inc/Baichuan-7B), a bilingual LLM.
 * May 20, 2023: :tada: Code and Preprint Paper released! 
@@ -62,7 +63,6 @@
 #### TODO List:
 - [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] A tutorial for pruning new LLMs.
-- [ ] Scaling up the finetuning with large-scale corpus. (Update: Some initial experimental results can be found [here](https://github.com/horseee/LLM-Pruner/issues/9#issuecomment-1633983253))
 - [ ] Support `.from_pretrained()` for loading the model.
 
 #### Contact Us:
@@ -141,8 +141,9 @@ Comming Soon...
     
 ### 2. Post-Training (Recover Stage)
 
+* Train using Alpaca with 50,000 samples. Here's an example of training on a single GPU:
 ```
-python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_model.bin \
+CUDA_VISIBLE_DEVICES=X python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_model.bin \
       --data_path yahma/alpaca-cleaned \
       --lora_r 8 \
       --num_epochs 2 \ 
@@ -153,7 +154,19 @@ python post_training.py --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_mode
 ```
 Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in step 1, and replace `PATH_TO_SAVE_TUNE_MODEL` with the desired location where you want to save the tuned model.
 
-
+* Train using [MBZUAI/LaMini-instruction](https://huggingface.co/datasets/MBZUAI/LaMini-instruction) with 2.59M samples. Here is an example using multiple gpus for training:
+```
+deepspeed --include=localhost:1,2,3,4 post_training.py \
+      --prune_model prune_log/PATH_TO_PRUNE_MODEL/pytorch_model.bin \
+      --data_path MBZUAI/LaMini-instruction  \
+      --lora_r 8 \
+      --num_epochs 3  \
+      --output_dir tune_log/PATH_TO_SAVE_TUNE_MODEL \
+      --extra_val_dataset wikitext2,ptb \
+      --wandb_project llmpruner_lamini_tune \
+      --learning_rate 5e-5 \
+      --cache_dataset
+```
 
 ### 3. Generation
 
@@ -274,6 +287,14 @@ Statistics for pruned models:
 <p align="center">
 <img src="figures/statistic.png" width="50%"> <br>
 </p>
+
+Results of LLM-Pruner with 2.59M samples:
+| Pruning Ratio | #Param | Memory     | Latency | Speedup | BoolQ | PIQA  | HellaSwag | WinoGrande | ARC-e | ARC-c | OBQA  | Average |
+|---------------|--------|------------|---------|---------|-------|-------|-----------|------------|-------|-------|-------|---------|
+| LLaMA-7B      | 6.74B  | 12884.5MiB | 69.32s  | 1x      | 73.18 | 78.35 | 72.99     | 67.01      | 67.45 | 41.38 | 42.40 | 63.25   |
+| LLaMA-5.4B with Alpaca(50k)    | 5.47B  | 10488.4MiB | 58.55s  | 1.18x   | 64.62 | 77.20 | 68.80     | 63.14      | 64.31 | 36.77 | 39.80 | 59.23   |
+| LLaMA-5.4B with LaMini(2.59M)  | 5.47B  | 10488.4MiB | 58.55s  | 1.18x   | 76.57 | 77.37 | 66.60     | 65.82      | 70.62 | 40.70 | 38.80 | 62.36   |
+
 
 More results can be found in the paper. 
 

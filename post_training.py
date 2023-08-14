@@ -7,6 +7,7 @@ import os
 import sys
 import argparse
 from typing import List
+from pathlib import Path
 
 import torch
 import transformers
@@ -38,6 +39,11 @@ def main(args):
     else:
         prompter = ZeroPrompter()
 
+    world_size = int(os.environ.get("WORLD_SIZE", 1))
+    ddp = world_size != 1
+    if ddp:
+        gradient_accumulation_steps = gradient_accumulation_steps // world_size
+
     if device == 'cuda':
         model.half()
 
@@ -65,15 +71,25 @@ def main(args):
         return result
 
     def generate_and_tokenize_prompt(data_point):
-        full_prompt = prompter.generate_prompt(
-            data_point["instruction"],
-            data_point["input"],
-            data_point["output"],
-        )
+        if 'lamini' in args.data_path.lower():
+            full_prompt = prompter.generate_prompt(
+                data_point["instruction"],
+                None,
+                data_point["response"],
+            )
+        elif 'alpaca' in args.data_path.lower():
+            full_prompt = prompter.generate_prompt(
+                data_point["instruction"],
+                data_point["input"],
+                data_point["output"],
+            )
+        else:
+            raise NotImplementedError
+
         tokenized_full_prompt = tokenize(full_prompt)
         if not args.train_on_inputs:
             user_prompt = prompter.generate_prompt(
-                data_point["instruction"], data_point["input"]
+                data_point["instruction"], data_point["input"] if 'input' in data_point.keys() else None,
             )
             tokenized_user_prompt = tokenize(
                 user_prompt, add_eos_token=args.add_eos_token
@@ -92,7 +108,6 @@ def main(args):
 
     def split_and_tokenizer(test_data, tokenizer, seq_len, field_name):
         test_ids = tokenizer("\n\n".join(test_data[field_name]), return_tensors='pt').input_ids[0]
-        test_ids_batch = []
         nsamples = test_ids.numel() // seq_len
 
         test_set = []
@@ -119,16 +134,29 @@ def main(args):
 
     # Load Train Dataset
     data = load_dataset(args.data_path)
-    train_val = data["train"].train_test_split(
-        test_size=args.val_set_size, shuffle=True, seed=42
-    )
-    train_data = (
-        train_val["train"].shuffle().map(generate_and_tokenize_prompt)
-    )
-    val_data = {
-        args.data_path: train_val["test"].shuffle().map(generate_and_tokenize_prompt),
-    }
-   
+    if args.cache_dataset and os.path.exists('datasets/cache/{}.bin'.format(args.data_path)):
+        preprocess_data = torch.load('datasets/cache/{}.bin'.format(args.data_path))
+        train_data, val_data = preprocess_data['train'], preprocess_data['val']
+    else:
+        train_val = data["train"].train_test_split(
+            test_size=args.val_set_size, shuffle=True, seed=42
+        )
+        train_data = (
+            train_val["train"].shuffle().map(generate_and_tokenize_prompt)
+        )
+        val_data = {
+            args.data_path: train_val["test"].shuffle().map(generate_and_tokenize_prompt),
+        }
+        if args.cache_dataset and args.local_rank == 0:
+            cache_file = 'datasets/cache/{}.bin'.format(args.data_path)
+            cache_dir = '/'.join(cache_file.split('/')[:-1])
+            directory = Path(cache_dir)
+            directory.mkdir(parents=True, exist_ok=True)
+
+            torch.save({
+                'train': train_data, 'val': val_data
+            }, cache_file)
+
     # Load Extra Validation Dataset
     if args.extra_val_dataset:
         from LLMPruner.datasets.ppl_dataset import get_wikitext2, get_ptb
@@ -195,6 +223,7 @@ if __name__ == "__main__":
     parser.add_argument('--base_model', type=str, default="decapoda-research/llama-7b-hf", help='base model name')
     parser.add_argument('--prune_model', type=str, help='prune model name')
     parser.add_argument('--data_path', type=str, default="yahma/alpaca-cleaned", help='data path')
+    parser.add_argument('--cache_dataset', action="store_true", default=False)
     parser.add_argument('--extra_val_dataset', type=str, default=None, help='validation datasets. Split with ","')
     parser.add_argument('--output_dir', type=str, default="./lora-alpaca", help='output directory')
 
@@ -222,6 +251,9 @@ if __name__ == "__main__":
     # wandb params
     parser.add_argument('--wandb_project', type=str, default="")
     parser.add_argument('--resume_from_checkpoint', type=str, help="either training checkpoint or final adapter")
+
+    #ddp
+    parser.add_argument('--local_rank', type=int, default=-1)
    
     args = parser.parse_args()
     torch_version = int(torch.__version__.split('.')[1])
