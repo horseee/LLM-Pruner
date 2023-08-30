@@ -1,3 +1,16 @@
+
+
+# Guidelines
+The instructions below for pruning more LLMs just ensure that these LLMs can be properly pruned. However, it's important to note that multiple factors can affect the performance. To achieve a pruned model with better performance, careful consideration of the subsequent configurations is essential (possibly requiring adjustments to the code):
+
+1. When employing the Taylor pruner (by setting `--pruner_type taylor`), the selection of the dataset for estimating Taylor importance holds significance. While our default choice is the 'bookcorpus' dataset, this may not always be optimal, especially for bilingual models. Thus, if a different pruning dataset is desired, the relevant code line necessitating modification is as follows:
+```
+example_prompts = get_examples('bookcorpus', tokenizer, args.num_examples, seq_len = 64).to(args.device)
+```
+
+2. The layers chosen for pruning are important. We show in our paper that the first and the last layers notably impact the model.However, identifying the optimal intermediate layers for pruning in more LLMs remains uncertain. To discover a pruned model of higher quality, adjustments to hyperparameters like `block_mlp_layer_start`, `block_mlp_layer_end`, `block_attention_layer_start`, `block_attention_layer_end` are recommended. 
+
+
 # More LLMs
 
 * [BLOOM](#cherry_blossom-bloom)
