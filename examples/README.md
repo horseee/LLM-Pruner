@@ -1,7 +1,26 @@
 # More LLMs
 
-* [BLOOM](#bloom)
+* [BLOOM](#cherry_blossom-bloom)
 * [Baichuan](#llama-baichuan)
+
+## :cherry_blossom: BLOOM
+
+* For Pruning:
+
+```
+python examples/bloom.py  \
+    --base_model YOUR_BLOOM_MODEL \
+    --pruning_ratio 0.25 \
+    --block_wise \
+    --block_mlp_layer_start 4 --block_mlp_layer_end 20 \
+    --block_attention_layer_start 4 --block_attention_layer_end 20 \
+    --pruner_type taylor \
+    --device cuda  --eval_device cuda \
+    --test_after_train --test_before_train \
+    --save_ckpt_log_name bloom_prune
+```
+
+Here, replace `YOUR_BLOOM_MODEL` with the BLOOM model you want to prune. See the full list [here](https://huggingface.co/docs/transformers/model_doc/bloom). For example, for the 7B1 model, replace `YOUR_BLOOM_MODEL` with `bigscience/bloom-7b1`.
 
 ## :llama: Baichuan
 
@@ -51,20 +70,3 @@ The minimum example for pruning Baichuan models is provided in the above instruc
 
 1. Adjust the calibration data used for calculating the pruning metric ([Line 143](https://github.com/horseee/LLM-Pruner/blob/2d60e00c86d72788a182b505ce42334f42fcb933/examples/baichuan.py#L143) in baichuan.py), such as using dialogues or some Chinese corpus.
 2. Try different Chinese corpora during the recovery stage of the pruned model.
-
-
-## BLOOM
-
-* For Pruning:
-python examples/bloom.py  \
-    --base_model YOUR_BLOOM_MODEL \
-    --pruning_ratio 0.25 \
-    --block_wise 
-    --block_mlp_layer_start 4 --block_mlp_layer_end 20 \
-    --block_attention_layer_start 4 --block_attention_layer_end 20 \
-    --pruner_type taylor \
-    --device cuda  --eval_device cuda \
-    --test_after_train --test_before_train \
-    --save_ckpt_log_name bloom_prune
-
-Here, replace `YOUR_BLOOM_MODEL` with the BLOOM model you want to prune. See the full list [here](https://huggingface.co/docs/transformers/model_doc/bloom). For example, for the 7B1 model, replace `YOUR_BLOOM_MODEL` with `bigscience/bloom-7b1`.
