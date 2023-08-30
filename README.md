@@ -54,8 +54,9 @@
 #### Supported LLMs:
 - [x] [Llama-2 Hugging Face](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
 - [x] [LLaMA Hugging Face](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
-- [x] [Vicuna Official](https://github.com/horseee/LLM-Pruner#llama-vicuna-pruning)
-- [x] [Baichuan Official](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
+- [x] [BLOOM](https://github.com/horseee/LLM-Pruner/tree/main/examples#cherry_blossom-bloom) 
+- [x] [Vicuna](https://github.com/horseee/LLM-Pruner#llama-vicuna-pruning)
+- [x] [Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
 
 #### Updates:
 * August 30, 2023: LLM-Pruner now supports [BLOOM](https://huggingface.co/docs/transformers/model_doc/bloom) :cherry_blossom:
