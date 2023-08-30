@@ -20,6 +20,9 @@
   <a href="https://github.com/lm-sys/FastChat">
     <img src="https://img.shields.io/badge/LLMs-Vicuna-924E7D.svg?style=flat-square" alt="Vicuna">
   </a>
+  <a href="https://huggingface.co/docs/transformers/model_doc/bloom">
+    <img src="https://img.shields.io/badge/LLMs-BLOOM-1A63BD.svg?style=flat-square" alt="BLOOM">
+  </a>
   <a href="https://github.com/THUDM/ChatGLM-6B">
     <img src="https://img.shields.io/badge/LLMs-chatGLM-6082B6.svg?style=flat-square" alt="chatGLM">
   </a>
@@ -55,6 +58,7 @@
 - [x] [Baichuan Official](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
 
 #### Updates:
+* August 30, 2023: LLM-Pruner now supports [BLOOM](https://huggingface.co/docs/transformers/model_doc/bloom) :cherry_blossom:
 * August 14, 2023:  [Code](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) and [results](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) for finetuning with a large-scale corpus are now available. The fine-tuned LLaMA-5.4B model achieves an average accuracy of 62.36%, closely approaching the original LLaMA-7B (63.25%).
 * July 19, 2023: :fire:  LLM-Pruner now supports Llama-2-7b and Llama-2-13b (the huggingface version) 
 * July 18, 2023: :rocket: Support [Baichuan](https://github.com/baichuan-inc/Baichuan-7B), a bilingual LLM.
