@@ -1,4 +1,4 @@
-<p align="center">
+![image](https://github.com/horseee/LLM-Pruner/assets/22924514/36da4cce-8241-47d7-a514-eb241d22b5f7)<p align="center">
 <img src="figures/logo.png" width="20%"> <br>
 </p>
 
@@ -73,7 +73,7 @@
 #### Contact Us:
 
 Join our Discord or WeChat group for a chat:
-  * Discord: [link](https://discord.gg/2CXnf5bN)
+  * Discord: [link](https://discord.gg/hjX24XA9)
   * WeChat (Group size exceeded 200): [QR Code](https://github.com/VainF/Torch-Pruning/assets/18592211/6c80e758-7692-4dad-b6aa-1e1877e72bf7)
 
 ## Quick Start
