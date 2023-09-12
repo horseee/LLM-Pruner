@@ -1,4 +1,4 @@
-![image](https://github.com/horseee/LLM-Pruner/assets/22924514/36da4cce-8241-47d7-a514-eb241d22b5f7)<p align="center">
+<p align="center">
 <img src="figures/logo.png" width="20%"> <br>
 </p>
 
