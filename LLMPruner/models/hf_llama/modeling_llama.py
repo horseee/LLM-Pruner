@@ -611,6 +611,7 @@ class LlamaModel(LlamaPreTrainedModel):
 
 
 class LlamaForCausalLM(LlamaPreTrainedModel):
+    #TODO: Add support for LLama2-70B
     def __init__(self, config):
         super().__init__(config)
         self.model = LlamaModel(config)

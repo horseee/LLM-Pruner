@@ -98,7 +98,7 @@ def main(args):
             "global_pruning": args.global_pruning,
             "iterative_steps": args.iterative_steps,
             "ch_sparsity": args.pruning_ratio, 
-            "ignored_layers":[],
+            "ignored_layers": [],
             "channel_groups": {
             },
             "consecutive_groups": {
@@ -125,6 +125,7 @@ def main(args):
         for i in range(args.iterative_steps):
 
             if pruner_type in ['taylor']:
+                #TODO: Add support for custom dataset
                 example_prompts = get_examples('bookcorpus', tokenizer, args.num_examples, seq_len = 64).to(args.device)
                 logger.log("Start Backwarding in iterative steps = {}...".format(i))
                 if args.taylor in ['param_mix', 'param_second']:
@@ -268,6 +269,7 @@ def main(args):
     logger.log("PPL after pruning: {}".format(ppl))
     logger.log("Memory Requirement: {} MiB\n".format(torch.cuda.memory_allocated()/1024/1024))
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Pruning LLaMA (huggingface version)')
 
@@ -276,6 +278,7 @@ if __name__ == "__main__":
     parser.add_argument('--save_ckpt_log_name', type=str, default="llama_prune", help='the path for save the checkpoint and the log. The final path would be log/{your_name_here}_{pruner_type}_{pruning_ratio}')
     parser.add_argument('--pruning_ratio', type=float, default=0.5, help='pruning ratio')
     parser.add_argument('--pruner_type', type=str, default='l2', help='pruner type')
+    parser.add_argument('--data', type=str, default='bookcorpus', help='dataset')
 
     # argument for generation
     parser.add_argument('--temperature', type=float, default=1.0, help='temperature')
