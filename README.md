@@ -328,11 +328,11 @@ More results can be found in the paper.
 ## Citation
 If you find this project useful, please cite
 ```
-@article{ma2023llmpruner,
+@inproceedings{ma2023llmpruner,
   title={LLM-Pruner: On the Structural Pruning of Large Language Models},
   author={Xinyin Ma and Gongfan Fang and Xinchao Wang},
-  journal={Advances in Neural Information Processing Systems},
-  year={2023}
+  booktitle={Advances in Neural Information Processing Systems},
+  year={2023},
 }
 ```
 ```
