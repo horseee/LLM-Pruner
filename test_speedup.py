@@ -33,7 +33,7 @@ def LlamaAttention_counter_hook(module, input, output):
 
     rotary_flops = 2 * (q_len * num_heads * head_dim) * 2
     attention_flops = num_heads * (q_len * q_len * head_dim + q_len * q_len + q_len * q_len * head_dim) #QK^T + softmax + AttentionV
-    linear_flops = 4 * (q_len * linear_dim * linear_dim) # 4 for q, k, v, o. 
+    linear_flops = 4 * (q_len * linear_dim * num_heads * head_dim) # 4 for q, k, v, o. 
     flops += rotary_flops + attention_flops + linear_flops
     module.__flops__ += int(flops)
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Tuning Pruned LLaMA (huggingface version)')
 
     parser.add_argument('--base_model', type=str, default="decapoda-research/llama-7b-hf", help='base model name')
-    parser.add_argument('--model_type', type=str, required=True, help = 'choose from ')
+    parser.add_argument('--model_type', type=str, required=True, help = 'choose from [pretrain, pruneLLM]')
     parser.add_argument('--ckpt', type=str, default=None)
     parser.add_argument('--lora_ckpt', type=str, default=None)
     
