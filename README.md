@@ -77,7 +77,7 @@ Join our Discord or WeChat group for a chat:
   * Discord: [link](https://discord.gg/NTbuBt59)
   * WeChat (Group size exceeded 200): [QR Code](https://github.com/VainF/Torch-Pruning/assets/18592211/6c80e758-7692-4dad-b6aa-1e1877e72bf7)
 
-#### Table of Contents:
+## Table of Contents
   - [Quick Start](#quick-start)
   - [Step-by-step Instructions](#step-by-step-instructions)
   - [Zero-shot Evaluation](#zero-shot-evaluation)
