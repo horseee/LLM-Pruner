@@ -39,6 +39,7 @@
 <img src="figures/LLaMA_example.png" width="100%"> <br>
 </p>
 
+
 ## Introduction
   
 > **[LLM-Pruner: On the Structural Pruning of Large Language Models](https://arxiv.org/abs/2305.11627)** [[arXiv]](https://arxiv.org/abs/2305.11627)   
@@ -75,6 +76,16 @@
 Join our Discord or WeChat group for a chat:
   * Discord: [link](https://discord.gg/NTbuBt59)
   * WeChat (Group size exceeded 200): [QR Code](https://github.com/VainF/Torch-Pruning/assets/18592211/6c80e758-7692-4dad-b6aa-1e1877e72bf7)
+
+#### Table of Contents:
+  - [Quick Start](#quick-start)
+  - [Step-by-step Instructions](#step-by-step-instructions)
+  - [Zero-shot Evaluation](#zero-shot-evaluation)
+  - [More-Examples](#more-examples)
+  - [Version Infomation](#version-information)
+  - [Limitations](#limitations)
+  - [Acknowledgement](#acknowledgement)
+  - [Citation](#citation)
 
 ## Quick Start
 
@@ -310,6 +321,12 @@ More results can be found in the paper.
 | LLaMa-7B | <u>The universe is the entirety of space, time, matter, and energy that exists.</u> It includes all matter and energy, whether visible or not, and in fact the whole universe is invisible. There are many theories regarding its origin and ultimate fate... | LLaMa-5.4B | <u>The universe is the entirety of space, time, matter, and energy that exists.</u> The laws that make up physics — electrons orbiting atoms, magnets attracting other objects, planets orbiting the Sun—have been consistent over ...|
 | Vicuna-7B | <u>10 steps to build an ios app:</u> 1. Research and develop the idea. 2. Decide on the platform you want to use (iOS, Android, or both). 3. Create a plan and budget. 4. Hire a team of developers. 5. Design the user interface (UI). 6. Develop the user interface (UI). 7. Test and iterate on the app. 8. Submit the app to the app store. 9. Optimize the app for performance and user experience (UX). 10. Market and promote the app. | Vicuna-5.4B | <u>10 steps to build an ios app:</u> 1. Plan your app: decide what it should do, what it will look like, and what it will cost to build it. 2. Hire a developer: A good iOS developer will help you design the user interface, create the app, and make sure it’s bug-free. 3. Create a user interface: This is where the magic happens. Your app’s user interface will be designed and mocked up at this point... |
 | ChatGLM-6B | <u>Write a poetry about love and peace.</u> In the midst of life's hustle and bustle, I find your love a soothing peace. It is a feeling that cannot be conveyed, A connection that cannot be distanced. With your smile, your eyes, your embrace, I feel a sense of belonging that only you can give. It is a love that lasts forever, A love that cannot be defeat... | ChatGLM-5.6B | <u>Write a poetry about love and peace.</u> Love and peace, two such wonderful things\ A pure and endless desire in my heart\ And both of them, I must seek for\ A long, long time, I know..\ Love, I know, is a feeling of being\ A perfect partner, in every sense\ And peace, I need it, so much, one day\ A long, long way, my heart will go..|
+
+## Version Infomation
+Due to changes in the versions of models and repos used in this project, we listed some known version issues and the specific versions needed to reproduce our method:
+1. lm-eval-harness: We use [this commit](https://github.com/EleutherAI/lm-evaluation-harness/tree/4d21ab6b2713cc3a8b4fa7574e89c62ef504e75f), and the code is also included here. Please check [Issue #25](https://github.com/horseee/LLM-Pruner/issues/25) for details.
+2. LLaMA1-7B: We use the checkpoint of [decapoda-research/llama-7b-hf](https://huggingface.co/decapoda-research/llama-7b-hf) in our experiments, which is not available now. Please consider using the copied version, e.g.,[baffo32/decapoda-research-llama-7B-hf](https://huggingface.co/baffo32/decapoda-research-llama-7B-hf).
+
 
 ## Limitations
 * Although we only used 50K data and trained for three hours, more data would definitely be better. We are testing on this.
