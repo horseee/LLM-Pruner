@@ -324,7 +324,7 @@ More results can be found in the paper.
 
 ## Version Information
 Due to changes in the versions of models and repos used in this project, we listed some known version issues and the specific versions needed to reproduce our method:
-1. lm-eval-harness: We use [this commit](https://github.com/EleutherAI/lm-evaluation-harness/tree/4d21ab6b2713cc3a8b4fa7574e89c62ef504e75f), and the code is also included here. Please check [Issue #25](https://github.com/horseee/LLM-Pruner/issues/25) for details.
+1. lm-eval-harness: We use [this commit](https://github.com/EleutherAI/lm-evaluation-harness/tree/4d21ab6b2713cc3a8b4fa7574e89c62ef504e75f) of lm-evaluation-harness, and the code is also included in this repo. Please check [Issue #25](https://github.com/horseee/LLM-Pruner/issues/25) for details.
 2. LLaMA1-7B: We use the checkpoint of [decapoda-research/llama-7b-hf](https://huggingface.co/decapoda-research/llama-7b-hf) in our experiments, which is not available now. Please consider using the copied version, e.g.,[baffo32/decapoda-research-llama-7B-hf](https://huggingface.co/baffo32/decapoda-research-llama-7B-hf).
 
 
