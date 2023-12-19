@@ -170,6 +170,8 @@ CUDA_VISIBLE_DEVICES=X python post_training.py --prune_model prune_log/PATH_TO_P
 ```
 Make sure to replace `PATH_TO_PRUNE_MODEL` with the path to the pruned model in step 1, and replace `PATH_TO_SAVE_TUNE_MODEL` with the desired location where you want to save the tuned model.
 
+**Tip**: [Training LLaMA-2 in float16 is not recommended and is known to produce nan; as such, the model should be trained in bfloat16.](https://huggingface.co/docs/transformers/model_doc/llama2#usage-tips)
+
 * Train using [MBZUAI/LaMini-instruction](https://huggingface.co/datasets/MBZUAI/LaMini-instruction) with 2.59M samples. Here is an example using multiple gpus for training:
 ```
 deepspeed --include=localhost:1,2,3,4 post_training.py \
