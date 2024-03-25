@@ -75,7 +75,7 @@
 
 Join our Discord or WeChat group for a chat:
   * Discord: [link](https://discord.gg/Z6r34MnE)
-  * WeChat Group [Group 1 (500/500, FULL)](https://github.com/VainF/Torch-Pruning/assets/18592211/35d66130-eb03-4dcb-ad75-8df784460ad3), [Group-2](https://github.com/VainF/Torch-Pruning/assets/18592211/4e5f98e9-86b6-46bd-9e9f-3275c5ccc2f4)
+  * WeChat Group [Group 1 (500/500, FULL)](https://github.com/VainF/Torch-Pruning/assets/18592211/35d66130-eb03-4dcb-ad75-8df784460ad3), [Group-2](https://github.com/VainF/Torch-Pruning/assets/18592211/35e279a1-1d5f-43d1-a893-1d94056dd984)
 
 ## Table of Contents
   - [Quick Start](#quick-start)
