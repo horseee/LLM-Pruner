@@ -71,7 +71,7 @@
 - [ ] A tutorial for pruning new LLMs.
 - [ ] Support `.from_pretrained()` for loading the model.
 
-### **Contact Us:**
+#### **Contact Us:**
 Join our Discord or WeChat group for a chat:
   * Discord: [link](https://discord.gg/Pvd6hbYXRs)
   * WeChat Group [Group-2](https://github.com/VainF/Torch-Pruning/assets/18592211/fc5fd824-2a07-4009-a377-2b0893181373), [Group 1 (500/500, FULL)](https://github.com/VainF/Torch-Pruning/assets/18592211/35d66130-eb03-4dcb-ad75-8df784460ad3).
