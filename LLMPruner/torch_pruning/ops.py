@@ -42,6 +42,14 @@ class _ReshapeOp(nn.Module):
         self.id = id
     def __repr__(self):
         return "_Reshape_{}()".format(self.id)
+    
+class _ExpandOp(nn.Module):
+    def __init__(self, id):
+        super(_ExpandOp, self).__init__()
+        self.id = id
+
+    def __repr__(self):
+        return "_ExpandOp_{}()".format(self.id)
 
 
 class _ElementWiseOp(nn.Module):
@@ -80,6 +88,8 @@ class ReshapePruner(DummyPruner):
 class SplitPruner(DummyPruner):
     pass
 
+class ExpandPruner(DummyPruner):
+    pass
 
 class ElementWisePruner(DummyPruner):
     pass
@@ -121,6 +131,7 @@ class OPTYPE(IntEnum):
     RESHAPE = 14
     GN = 15  # nn.GroupNorm
     IN = 16  # nn.InstanceNorm
+    EXPAND = 17
 
 
 def module2type(module):
@@ -157,6 +168,8 @@ def module2type(module):
         return OPTYPE.IN
     elif isinstance(module, _ReshapeOp):
         return OPTYPE.RESHAPE
+    elif isinstance(module, _ExpandOp):
+        return OPTYPE.EXPAND
     else:
         return OPTYPE.ELEMENTWISE
 
@@ -192,6 +205,8 @@ def type2class(op_type):
         return TORCH_LSTM
     elif OPTYPE == OPTYPE.RESHAPE:
         return _ReshapeOp
+    elif OPTYPE == OPTYPE.EXPAND:
+        return _ExpandOp
     else:
         return _ElementWiseOp
 

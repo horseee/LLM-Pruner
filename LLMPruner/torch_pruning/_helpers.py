@@ -50,7 +50,22 @@ class _ConcatIndexMapping(object):
             new_idxs = [i + self.offset[0] for i in idxs]
         return new_idxs
 
+class _ExpandIndexMapping(object):
+    def __init__(self, repeat, reverse=False):
+        self.repeat = repeat
+        self.reverse = reverse
 
+    def __call__(self, idxs):
+        if self.reverse == True:
+            new_idxs = [i // self.repeat for i in idxs[::self.repeat]]
+        else:
+            new_idxs = [
+                i * self.repeat + j
+                for i in idxs
+                for j in range(self.repeat)
+            ]
+        return new_idxs
+    
 class _SplitIndexMapping(object):
     def __init__(self, offset, reverse=False):
         self.offset = offset
@@ -84,6 +99,7 @@ class _GroupConvIndexMapping(object):
             )
             max_group_size = int(group_histgram.max())
         return new_idxs
+
 
 
 class ScalarSum:
