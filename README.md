@@ -17,6 +17,9 @@
   <a href="https://github.com/facebookresearch/llama">
     <img src="https://img.shields.io/badge/LLMs-Llama2-FAB093.svg?style=flat-square" alt="Llama-2">
   </a>
+  <a href="https://github.com/facebookresearch/llama">
+    <img src="https://img.shields.io/badge/LLMs-Llama3&3.1-7CC217.svg?style=flat-square" alt="Llama-3">
+  </a>
   <a href="https://github.com/lm-sys/FastChat">
     <img src="https://img.shields.io/badge/LLMs-Vicuna-924E7D.svg?style=flat-square" alt="Vicuna">
   </a>
@@ -27,7 +30,7 @@
     <img src="https://img.shields.io/badge/LLMs-chatGLM-6082B6.svg?style=flat-square" alt="chatGLM">
   </a>
     <a href="https://github.com/baichuan-inc/Baichuan-7B">
-    <img src="https://img.shields.io/badge/LLMs-Baichuan-78ac62.svg?style=flat-square" alt="Baichuan">
+    <img src="https://img.shields.io/badge/LLMs-Baichuan-18ac62.svg?style=flat-square" alt="Baichuan">
   </a>
 </div>
 <h3>On the Structural Pruning of Large Language Models<h3>
