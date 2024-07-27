@@ -60,7 +60,7 @@
 - [x] [Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
 
 #### Updates:
-* July 27, 2024: The supports GQA! Now LLM-Pruner can work on Llama3 and Llama 3.1. We are still testing the pruning results of new LLMs (Llama3, Llama3.1, Gemma) and you can find the results in [here]().
+* July 27, 2024: Support GQA! Now LLM-Pruner can work on Llama3 and Llama 3.1. We are still testing the pruning results of new LLMs (Llama3, Llama3.1, Gemma) and you can find the results in [here]().
 * August 30, 2023: LLM-Pruner now supports [BLOOM](https://huggingface.co/docs/transformers/model_doc/bloom) :cherry_blossom:
 * August 14, 2023:  [Code](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) and [results](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) for finetuning with a large-scale corpus are now available. The fine-tuned LLaMA-5.4B model achieves an average accuracy of 62.36%, closely approaching the original LLaMA-7B (63.25%).
 * July 19, 2023: :fire:  LLM-Pruner now supports Llama-2-7b and Llama-2-13b (the huggingface version) 
