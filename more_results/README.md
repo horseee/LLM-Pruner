@@ -16,8 +16,8 @@
 | Method | Base | L2 | Taylor (param_first) | Base | L2 | Taylor (param_first) | 
 | -- |  -- | -- | -- | -- | -- | -- |
 | Sequence Length | 2048 | 2048 | 2048 | 128 | 128 | 128 |
-| WikiText2  (PPL) |
-| PTB  (PPL) |
+| WikiText2  (PPL) | 6.24 | 49.09 | 12.71 | 14.31 | 88.33 | 25.93 |
+| PTB  (PPL) | 10.57 | 64.36 | 20.61 | 27.74 | 148.98 | 47.98 |
 
 #Param before: 8030261248, #Param after: 6612586496, Ratio = 82.3458%
 
