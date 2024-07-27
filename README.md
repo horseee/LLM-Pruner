@@ -137,6 +137,10 @@ Arguments:
 
 
 #### :llama: Vicuna Pruning
+
+<details>
+<summary>Details:</summary>
+  
 If you want to try Vicuna, please specify the argument `--base_model` to the path to vicuna weight. Please follow <a href="https://github.com/lm-sys/FastChat">https://github.com/lm-sys/FastChat</a> to get Vicuna weights.
 ```
 python hf_prune.py --pruning_ratio 0.25 \
@@ -150,13 +154,23 @@ python hf_prune.py --pruning_ratio 0.25 \
       --base_model PATH_TO_VICUNA_WEIGHTS
 ```
 
+</details>
+
 
 #### :llama: Baichuan Pruning
 
+<details>
+<summary>Details:</summary>
+  
 Please refer to the [Example/Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning) for more details
 
+</details>
 
 #### :llama: Llama3/Llama3.1 Pruning
+
+<details>
+<summary>Details:</summary>
+  
 ```
 python llama3.py --pruning_ratio 0.25 \
                  --device cuda --eval_device cuda \
@@ -168,6 +182,8 @@ python llama3.py --pruning_ratio 0.25 \
                  --max_seq_len 2048 \
                  --test_after_train --test_before_train --save_model 
 ```
+
+</details>
     
 ### 2. Post-Training (Recover Stage)
 
