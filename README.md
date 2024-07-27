@@ -60,7 +60,7 @@
 - [x] [Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
 
 #### Updates:
-* July 27, 2024: Support GQA! Now LLM-Pruner can work on Llama3 and Llama 3.1. We are still testing the pruning results of new LLMs (Llama3, Llama3.1, Gemma) and you can find the results in [here]().
+* July 27, 2024: :rocket: Support GQA! Now LLM-Pruner can work on Llama3 and Llama 3.1. We are still testing the pruning results of new LLMs (Llama3, Llama3.1, Gemma) and you can find the pruning results [here]().
 * August 30, 2023: LLM-Pruner now supports [BLOOM](https://huggingface.co/docs/transformers/model_doc/bloom) :cherry_blossom:
 * August 14, 2023:  [Code](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) and [results](https://github.com/horseee/LLM-Pruner#2-post-training-recover-stage) for finetuning with a large-scale corpus are now available. The fine-tuned LLaMA-5.4B model achieves an average accuracy of 62.36%, closely approaching the original LLaMA-7B (63.25%).
 * July 19, 2023: :fire:  LLM-Pruner now supports Llama-2-7b and Llama-2-13b (the huggingface version) 
@@ -68,7 +68,6 @@
 * May 20, 2023: :tada: Code and Preprint Paper released! 
 
 #### TODO List:
-- [ ] Code for [ChatGLM](https://github.com/THUDM/ChatGLM-6B)
 - [ ] A tutorial for pruning new LLMs.
 - [ ] Support `.from_pretrained()` for loading the model.
 
@@ -124,11 +123,11 @@ python hf_prune.py --pruning_ratio 0.25 \
       --save_ckpt_log_name llama_prune 
 ```
 Arguments:
-- ``Base model``: Choose the base model from LLaMA or Llama-2 and pass the `pretrained_model_name_or_path` to `--base_model`. The model name is used for `AutoModel.from_pretrained` to load the pre-trained LLM. For example, if you want to use the llama-2 with 13 billion parameters, than pass `meta-llama/Llama-2-13b-hf` to `--base_model`.
+- ``Base model``: Choose the base model from LLaMA or Llama-2 and pass the `pretrained_model_name_or_path` to `--base_model`. The model name is used for `AutoModel.from_pretrained` to load the pre-trained LLM. For example, if you want to use the llama-2 with 13 billion parameters, then pass `meta-llama/Llama-2-13b-hf` to `--base_model`.
 - ``Pruning Strategy``: Choose between block-wise, channel-wise, or layer-wise pruning using the respective command options: {--block_wise}, {--channel_wise}, {--layer_wise --layer NUMBER_OF_LAYERS}. For block-wise pruning, specify the start and end layers to be pruned. Channel-wise pruning does not require extra arguments. For layer pruning, use --layer NUMBER_OF_LAYERS to specify the desired number of layers to be kept after pruning.
 - ``Importance Criterion``: Select from l1, l2, random, or taylor using the --pruner_type argument. For the taylor pruner, choose one of the following options: vectorize, param_second, param_first, param_mix. By default, param_mix is used, which combines approximated second-order hessian and first-order gradient. If using l1, l2, or random, no extra arguments are required.
 - ``Pruning Ratio``: Specifies the pruning ratio of groups. It differs from the pruning rate of parameters, as groups are removed as the minimal units.
-- ``Device`` and ``Eval_device``: Pruning and evaluation can be performed on different devices. Taylor-based methods require backward computation during pruning, which may require significant GPU RAM. Our implementation uses the CPU for importance estimation (also support GPU, simply use --device cuda). eval_device is used to test the pruned model.
+- ``Device`` and ``Eval_device``: Pruning and evaluation can be performed on different devices. Taylor-based methods require backward computation during pruning, which may require significant GPU RAM. Our implementation uses the CPU for importance estimation (also supports GPU, simply use --device cuda). eval_device is used to test the pruned model.
  
 
 
@@ -152,8 +151,18 @@ python hf_prune.py --pruning_ratio 0.25 \
 Please refer to the [Example/Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning) for more details
 
 
-#### :llama: ChatGLM Pruning
-Comming Soon...
+#### :llama: Llama3/Llama3.1 Pruning
+```
+python llama3.py --pruning_ratio 0.25 \
+                 --device cuda --eval_device cuda \
+                 --base_model meta-llama/Meta-Llama-3-8B-Instruct \
+                 --block_wise --block_mlp_layer_start 4 --block_mlp_layer_end 30 \
+                 --block_attention_layer_start 4 --block_attention_layer_end 30 \
+                 --save_ckpt_log_name llama3_prune \
+                 --pruner_type taylor --taylor param_first \
+                 --max_seq_len 2048 \
+                 --test_after_train --test_before_train --save_model 
+```
     
 ### 2. Post-Training (Recover Stage)
 
