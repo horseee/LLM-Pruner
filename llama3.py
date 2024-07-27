@@ -132,6 +132,7 @@ def main(args):
                 logger.log("Start Backwarding in iterative steps = {}...".format(i))
                 if args.taylor in ['param_mix', 'param_second']:
                     for j in range(args.num_examples):
+                        print(j)
                         batch_input = example_prompts[j].unsqueeze(0)
                         loss = model(batch_input, labels=batch_input).loss
                         logger.log("Loss = {}".format(loss))

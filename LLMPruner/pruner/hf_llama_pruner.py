@@ -161,6 +161,7 @@ class MagnitudeImportance(tp.importance.Importance):
             prune_fn = dep.handler
             # Linear out_channels
             if prune_fn in [tp.prune_linear_out_channels, hf_linear_pruner.prune_out_channels]:
+                #print(layer, idxs)
                 w = layer.weight.data[idxs].flatten(1)
                 local_norm = w.abs().pow(self.p).sum(1)
                 group_imp.append(local_norm)

@@ -236,12 +236,14 @@ class MetaPruner:
             return
         for group in self.DG.get_all_groups(ignored_layers=self.ignored_layers, root_module_types=self.root_module_types, root_instances=self.root_instances):
             # check pruning rate
+            print(group)
             if self._check_sparsity(group):
                 module = group[0][0].target.module
                 pruning_fn = group[0][0].handler
 
                 ch_groups = self.get_channel_groups(group)
                 consecutive_groups = self.get_consecutive_groups(group)
+                print(ch_groups, consecutive_groups)
                 imp = self.estimate_importance(group, ch_groups=ch_groups, consecutive_groups=consecutive_groups)
                 if imp is None: continue
                 current_channels = self.DG.get_out_channels(module)
