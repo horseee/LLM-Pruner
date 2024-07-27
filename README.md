@@ -53,8 +53,10 @@
 - [x] **Automatic structural pruning**: Pruning new LLMs with minimal human effort (In progress).
 
 #### Supported LLMs:
-- [x] [Llama-2 Hugging Face](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
-- [x] [LLaMA Hugging Face](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
+- [x] [Llama-3.1](https://huggingface.co/collections/meta-llama/llama-31-669fc079a0c406a149a5738f)
+- [x] [Llama-3](https://huggingface.co/collections/meta-llama/meta-llama-3-66214712577ca38149ebb2b6)
+- [x] [Llama-2](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
+- [x] [LLaMA](https://github.com/horseee/LLM-Pruner#1-pruning-discovery-stage--estimation-stage)
 - [x] [BLOOM](https://github.com/horseee/LLM-Pruner/tree/main/examples#cherry_blossom-bloom) 
 - [x] [Vicuna](https://github.com/horseee/LLM-Pruner#llama-vicuna-pruning)
 - [x] [Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
