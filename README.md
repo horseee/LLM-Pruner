@@ -63,6 +63,7 @@
 - [x] [BLOOM](https://github.com/horseee/LLM-Pruner/tree/main/examples#cherry_blossom-bloom) 
 - [x] [Vicuna](https://github.com/horseee/LLM-Pruner#llama-vicuna-pruning)
 - [x] [Baichuan](https://github.com/horseee/LLM-Pruner/tree/main/examples#llama-baichuan-pruning)
+- [x] [TinyLlama](https://github.com/jzhang38/TinyLlama) 
 
 #### Updates:
 * July 27, 2024: :rocket: Support GQA! Now LLM-Pruner can work on Llama3 and Llama 3.1. We are still testing the pruning results of new LLMs (Llama3, Llama3.1, Gemma) and you can find the pruning results [here]().
