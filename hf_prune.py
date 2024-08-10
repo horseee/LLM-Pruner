@@ -36,10 +36,11 @@ def main(args):
         setup_sublogger=True
     )
 
-    tokenizer = LlamaTokenizer.from_pretrained(args.base_model)
+    tokenizer = LlamaTokenizer.from_pretrained(args.base_model,device_map='auto')
     model = LlamaForCausalLM.from_pretrained(
         args.base_model,
-        low_cpu_mem_usage=True if args.torch_version >=1.9 else False
+        low_cpu_mem_usage=True if args.torch_version >=1.9 else False,
+        device_map='auto'
     )
     if args.device != "cpu":
         model.half()
