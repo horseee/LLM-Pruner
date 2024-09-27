@@ -79,7 +79,8 @@
 
 #### **Contact Us:**
 Join our WeChat group for a chat:
-  * WeChat Group [Group-2](https://github.com/user-attachments/assets/7c53a5c2-5c1e-47fc-9bb6-cde98ce5d070), [Group-1 (500/500, FULL)](https://github.com/VainF/Torch-Pruning/assets/18592211/35d66130-eb03-4dcb-ad75-8df784460ad3).
+  * WeChat Group [Group-2](https://github.com/user-attachments/assets/99751bf7-bb61-4958-bbec-c671772f9500), [Group-1 (500/500, FULL)](https://github.com/VainF/Torch-Pruning/assets/18592211/35d66130-eb03-4dcb-ad75-8df784460ad3).
+
 
 
 ## Table of Contents
