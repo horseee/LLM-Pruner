@@ -44,8 +44,11 @@ def main(args):
     if ddp:
         gradient_accumulation_steps = gradient_accumulation_steps // world_size
 
-    if device == 'cuda':
-        model.half()
+    if 'Llama-2' in args.base_model:
+        model = model.float() # prevent nan/large loss during training llama2
+    else:
+        if device == 'cuda':
+            model.half()
 
     tokenizer.pad_token_id = 0
     tokenizer.padding_side = "left"
