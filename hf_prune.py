@@ -195,6 +195,25 @@ def main(args):
             if pruner_type in ['taylor']:
                 example_prompts = get_examples('bookcorpus', tokenizer, 10, seq_len = 64)
                 logger.log("Start Backwarding in iterative steps = {}...".format(i))
+                if args.taylor in ['param_mix', 'param_second']:
+                    for j in range(args.num_examples):
+                        batch_input = example_prompts[j].unsqueeze(0)
+                        loss = model(batch_input, labels=batch_input).loss
+                        logger.log("Loss = {}".format(loss))
+                        loss.backward()
+
+                        for module_param in model.parameters():
+                            module_param.grad = module_param.grad * module_param.grad / args.num_examples
+                            if hasattr(module_param, 'acc_grad'):
+                                module_param.acc_grad += module_param.grad
+                            else:
+                                module_param.acc_grad = copy.deepcopy(module_param.grad)
+                        model.zero_grad()
+                        del loss.grad
+
+                print(f"example_prompts.device: {example_prompts.device}")
+                print(f"model.device: {next(model.parameters()).device}")
+
                 loss = model(example_prompts, labels=example_prompts).loss
                 logger.log("Loss = {}".format(loss))
                 loss.backward()
