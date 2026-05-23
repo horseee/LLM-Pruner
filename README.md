@@ -102,7 +102,7 @@ pip install -r requirement.txt
 
 ### Minimal Example
 ```
-bash script/llama_prune.sh
+bash scripts/llama_prune.sh
 ```
 This script would compress the LLaMA-7B model with ～20\% parameters pruned. All the pre-trained models and the dataset would be automatically downloaded, so you do not need to manually download the resource. When running this script for the first time, it will require some time to download the model and the dataset.
 
